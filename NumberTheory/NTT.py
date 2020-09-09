@@ -152,5 +152,5 @@ class NTT:
         for i in range(1, num):
             x, y = self.extgcd(bas, -m_list[i], -a_list[i]-r)
             r += bas * x
-            bas *= b[i]
+            bas *= m_list[i]
         return r % bas
