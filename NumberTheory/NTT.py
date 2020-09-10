@@ -44,6 +44,8 @@ class NTT:
         return True
     
     def extgcd(self, a, b, c):
+        if b < 0:
+            a, b, c = -a, -b, -c
         x, y, u, v, k, l = 1, 0, 0, 1, a, b
         while l:
             x, y, u, v = u, v, x - u * (k // l), y - v * (k // l)
@@ -143,7 +145,7 @@ class NTT:
         bas = m_list[0]
         x, y = 0, 0
         for i in range(1, num):
-            x, y = self.extgcd(bas, -m_list[i], -a_list[i]-r)
+            x, y = self.extgcd(bas, -m_list[i], a_list[i]-r)
             r += bas * x
             bas *= m_list[i]
         return r % bas
