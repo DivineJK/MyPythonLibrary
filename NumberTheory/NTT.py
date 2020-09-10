@@ -110,40 +110,33 @@ class NTT:
                 self.inverse_base_matrix[i][j] = self.inved(self.primal_base_matrix[i][j], self.modulo_list[i])
     
     def NTT(self, f, n, idx, depth, inverse=False, surface=True):
-        mod = self.modulo_list[idx]
-        if n == 1:
-            return f
-        if n == 2:
-            xf = [(f[0] + f[1])%mod, (f[0] - f[1])%mod]
-            if inverse * surface:
-                xf[0] *= self.inved(2, mod)
-                xf[0] %= mod
-                xf[1] *= self.inved(2, mod)
-                xf[1] %= mod
-            return xf
-        hn = n // 2
-        fe = [f[2*i+0] for i in range(hn)]
-        fo = [f[2*i+1] for i in range(hn)]
-        fe = self.NTT(fe, hn, idx, depth-1, inverse, False)
-        fo = self.NTT(fo, hn, idx, depth-1, inverse, False)
-        xf = [0 for _ in range(n)]
-        grow = 1
+        res = [0 for _ in range(n)]
+        tmp = [0 for _ in range(n)]
+        MOD = self.modulo_list[idx]
+        ipl = self.inved(n, MOD)
+        for i in range(n):
+            bas = 1
+            pos = 0
+            for j in range(depth, 0, -1):
+                pos += bas * ((i>>(j-1)) % 2)
+                bas *= 2
+            res[i] = f[pos]
+        for i in range(depth):
+            grow = 1
+            seed = inverse * self.primal_base_matrix[idx][i+1] + (1 - inverse) * self.inverse_base_matrix[idx][i+1]
+            for k in range(1<<i):
+                for j in range(1<<(depth-i-1)):
+                    tmp[j*(1<<(i+1))+k+0*(1<<i)] = (res[j*(1<<(i+1))+k] + grow * res[j*(1<<(i+1))+k+(1<<i)]) % MOD
+                    tmp[j*(1<<(i+1))+k+1*(1<<i)] = (res[j*(1<<(i+1))+k] - grow * res[j*(1<<(i+1))+k+(1<<i)]) % MOD
+                grow *= seed
+                grow %= MOD
+            for j in range(n):
+                res[j] = tmp[j]
         if inverse:
-            seed = self.primal_base_matrix[idx][depth]
-        else:
-            seed = self.inverse_base_matrix[idx][depth]
-        for i in range(hn):
-            right = (fo[i] * grow) % mod
-            xf[i+0*hn] = (fe[i] + right) % mod
-            xf[i+1*hn] = (fe[i] - right) % mod
-            grow *= seed
-            grow %= mod
-        if inverse * surface:
-            invn = self.inved(n, mod)
             for i in range(n):
-                xf[i] *= invn
-                xf[i] %= mod
-        return xf
+                res[i] *= ipl
+                res[i] %= MOD
+        return res
     
     def CRT(self, num, a_list, m_list):
         r = a_list[0]
