@@ -1,32 +1,44 @@
-class segtree:
-    def __init__(self, bin_level):
-        self.bl = bin_level
-        self.st = [[0 for __ in range(1<<_)] for _ in range(bin_level+1)]
-    
-    def st_make(self, n, arr):
-        for j in range(n):
-            tmp = j
-            for i in range(self.bl, -1, -1):
-                self.st[i][tmp] += arr[j]
-                tmp >>= 1
-    
-    def st_add(self, i, p):
-        tmp = i
-        for i in range(self.bl, -1, -1):
-            self.st[i][tmp] += p
+class segment_tree:
+    #        n: length of array
+    #       op: monoid (a op (b op c) == (a op b) op c)
+    # identity: identity of operation (ex. min -> INF, + -> 0, gcd -> 0, ...)
+    #  initial: initial state of bottom of segment tree
+    def __init__(self, n, op, identity, upd, initial=[]):
+        self.n = n
+        self.op = op
+        self.identity = identity
+        self.upd = upd
+        tmp = n - 1
+        self.cnt = 0
+        while tmp:
+            self.cnt += 1
             tmp >>= 1
-    
-    def st_sum(self, x):
-        if x < 0:
-            return 0
-        S = 0
-        pnt = 0
-        b = 1 << (self.bl)
-        for i in range(self.bl+1):
-            pnt <<= 1
-            if x >= b:
-                S += self.st[i][pnt]
-                pnt += 1
-                x -= b
-            b >>= 1
-        return S
+        self.bin_top = 1 << self.cnt
+        self.segtree = [self.identity]*(self.bin_top<<1)
+        if initial != []:
+            for i in range(n):
+                self.segtree[i+self.bin_top] = initial[i]
+                tmp = (i + self.bin_top) >> 1
+                for j in range(self.cnt):
+                    self.segtree[tmp] = self.op(self.segtree[2*tmp], self.segtree[2*tmp+1])
+                    tmp >>= 1
+    def update(self, p, x):
+        tmp = p + self.bin_top
+        self.segtree[tmp] = self.upd(self.segtree[tmp], x)
+        tmp >>= 1
+        for i in range(self.cnt):
+            self.segtree[tmp] = self.op(self.segtree[2*tmp], self.segtree[2*tmp+1])
+            tmp >>= 1
+    def get_segment(self, l, r): # interval == [l, r)
+        res = self.identity
+        L, R = l + self.bin_top, r + self.bin_top
+        while L < R:
+            if L & 1:
+                res = self.op(res, self.segtree[L])
+                L += 1
+            if R & 1:
+                res = self.op(res, self.segtree[R-1])
+                R -= 1
+            L >>= 1
+            R >>= 1
+        return res
