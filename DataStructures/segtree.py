@@ -3,6 +3,7 @@ class segment_tree:
     #       op: monoid (a op (b op c) == (a op b) op c)
     # identity: identity of operation (ex. min -> INF, + -> 0, gcd -> 0, ...)
     #  initial: initial state of bottom of segment tree
+    #      upd: update function
     def __init__(self, n, op, identity, upd, initial=[]):
         self.n = n
         self.op = op
@@ -42,3 +43,18 @@ class segment_tree:
             L >>= 1
             R >>= 1
         return res
+    def st_bisect(self, lower, upper, val):
+        if self.get_segment(lower, upper) < val:
+            return self.n
+        if self.segtree[lower+self.bin_top] >= val:
+            return lower
+        l, r = lower, upper
+        d = (l + r) // 2
+        while r - l > 1:
+            s = self.get_segment(lower, d+1)
+            if s < val:
+                l = d
+            else:
+                r = d
+            d = (l + r) // 2
+        return d + 1
