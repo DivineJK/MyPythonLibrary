@@ -2,11 +2,15 @@
 自分用のライブラリ
 
 ## 内容
-### DataStructure
-<ol type="disc">
-  <li></li>
-</ol>
+### DataStructures
+|segtree.py|ふつうのセグメントツリー（二分探索つき）|
+|:--|:--|
 
 ### Matrix
-### NTT
-### Sequences
+### NumberTheory
+|NTT.py|任意modに対応したNTT|
+|:--|:--|
+
+### Sequence
+|LIS.py|最長短調増加列|
+|:--|:--|
