@@ -1,5 +1,5 @@
 # my_python_libraries
-自分用のライブラリ
+自分用のライブラリ。速度より汎用性重視なので実戦には向かないかもしれない。
 
 ## 内容
 ### DataStructures
