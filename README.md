@@ -5,9 +5,14 @@
 ### DataStructures
 |名称|概要|
 |:--|:--|
+|UnionFind.py|UnionFind|
 |segtree.py|ふつうのセグメントツリー（二分探索つき）|
 
 ### Matrix
+|名称|概要|
+|:--|:--|
+|MatrixCollections.py|行列のいろいろ|
+
 ### NumberTheory
 |名称|概要|
 |:--|:--|
