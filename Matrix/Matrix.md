@@ -5,10 +5,14 @@
 行列演算詰め合わせ。
 
 matrix型 = list[list[(int, float, ...)]]
-
+### クラスオブジェクト
+|名称|型|概要|
+|:--|:--|:--|
+|number_type|set|matrixにのせる型を定義。|
+### 関数
 |名称|引数|返り値|概要|
 |:--|:--|:--|:--|
-|MatrixCollection|set additional_type={}|None|行列ライブラリ。additional_typeに型を追加することもある。|
+|MatrixCollection|set additional_type=set()|None|行列ライブラリ。additional_typeに型を追加することもある。|
 |zeros|int n, int m|matrix|ゼロ行列。|
 |identity|int n|matrix|単位行列。|
 |inved|int a, int mod|int|aの逆元。|
