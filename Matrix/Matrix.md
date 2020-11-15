@@ -2,6 +2,22 @@
 行列に関するライブラリ。
 
 ## MatrixCollections
+行列演算詰め合わせ。
+
+matrix型 = list[list[(int, float, ...)]]
+
+|名称|引数|返り値|概要|
+|:--|:--|:--|:--|
+|MatrixCollection|set additional_type={}|None|行列ライブラリ。additional_typeに型を追加することもある。|
+|zeros|int n, int m|matrix|ゼロ行列。|
+|identity|int n|matrix|単位行列。|
+|inved|int a, int mod|int|aの逆元。|
+|ismatrix|? a|bool|引数が正しい行列かどうかを返す。|
+|mat_sum|matrix a, matrix b, int weight=1, int modulo=0|matrix|行列の和を返す。|
+|mat_prod|matrix a, matrix b, int modulo=0|matrix|行列の積を返す。|
+|mat_inv|matrix a, int modulo=0|matrix|逆行列を返す。|
+|mat_pow|matrix a, int m, int modulo=0|matrix|行列の累乗を返す。|
+|kronecker_product|matrix a, matrix b, int modulo=0|matrix|行列のクロネッカー積を返す。|
 ### zeros
 
 整数<img src="https://latex.codecogs.com/gif.latex?n" title="n" />, <img src="https://latex.codecogs.com/gif.latex?m" title="m" />に対し、<img src="https://latex.codecogs.com/gif.latex?n\times&space;m" title="n\times&space;m" />ゼロ行列を返す。
