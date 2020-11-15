@@ -20,4 +20,4 @@
 |class segment_tree|int n, function op, ? identity, function upd, |None|セグ木づくり。|
 |update|int p, x|None|pで指定される要素をupd(segtree[p], x)に更新。|
 |get_segment|int l, int r|type(op(a, b))|区間[l, r)の和を返す。|
-|unite|int lower, int upper, val|int|区間[lower、upper)の中でval以上となる最小の添字を返す。|
+|st_bisect|int lower, int upper, val|int|区間[lower、upper)の中でval以上となる最小の添字を返す。|
