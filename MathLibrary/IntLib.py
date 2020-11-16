@@ -76,7 +76,7 @@ class IntLib:
             p += 1
         return True
     
-    def factorization(self, n):
+    def factorization(self, n, easy=False):
         a = n
         D = []
         p = 2
@@ -85,7 +85,10 @@ class IntLib:
             a //= p
             cnt += 1
         if cnt:
-            D.append([p, cnt])
+            if easy:
+                D.append(p)
+            else:
+                D.append([p, cnt])
         p += 1
         while a != 1:
             cnt = 0
@@ -93,12 +96,26 @@ class IntLib:
                 cnt += 1
                 a //= p
             if cnt:
-                D.append([p, cnt])
+                if easy:
+                    D.append(p)
+                else:
+                    D.append([p, cnt])
             p += 2
             if p * p > n and a != 1:
-                D.append([a, 1])
+                if easy:
+                    D.append(a)
+                else:
+                    D.append([a, 1])
                 break
         return D
+    
+    def totient(self, n):
+        d = self.factorization(n, True)
+        res = n
+        for i in d:
+            res //= i
+            res *= i - 1
+        return res
     
     def divisors(self, n, ordered=False):
         res = [1]
@@ -126,10 +143,11 @@ class IntLib:
             for i in range(self.fact_cnt, n):
                 self.fact[i+1] = self.fact[i] * (i + 1)
                 self.fact[i+1] %= modulo
-            self.invf[-1] = self.inved(self.fact[-1])
+            self.invf[-1] = self.inved(self.fact[-1], modulo)
             for i in range(n, self.fact_cnt, -1):
                 self.invf[i-1] = self.invf[i] * i
                 self.invf[i-1] %= modulo
+            self.fact_cnt = n
             
     def root_manual(self):
         for i in range(self.cr):
