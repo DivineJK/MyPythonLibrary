@@ -1,7 +1,10 @@
-class NTT:
+class IntLib:
     def __init__(self, convolution_rank, binary_level):
         self.cr = convolution_rank
         self.bl = binary_level
+        self.fact_cnt = 0
+        self.fact = [1]
+        self.invf = [1]
         self.modulo_list = [1]*convolution_rank
         self.primal_root_list = [1]*convolution_rank
         self.bin_list = [1]*(binary_level+1)
@@ -9,6 +12,36 @@ class NTT:
         self.inverse_base_matrix = [[0 for _ in range(binary_level+1)] for __ in range(convolution_rank)]
         for i in range(binary_level):
             self.bin_list[i+1] = self.bin_list[i] * 2
+    
+    def gcd(self, a, b):
+        if a < 0:
+            a = -a
+            b = -b
+        k, l = a, b
+        while l:
+            k, l = l, k % l
+        return k
+    
+    def extgcd(self, a, b, c):
+        if b < 0:
+            a, b, c = -a, -b, -c
+        x, y, u, v, k, l = 1, 0, 0, 1, a, b
+        while l:
+            x, y, u, v = u, v, x - u * (k // l), y - v * (k // l)
+            k, l = l, k % l
+        if c % k:
+            return "No Solution"
+        return x * c, y * c
+    
+    def CRT(self, num, a_list, m_list):
+        r = a_list[0]
+        bas = m_list[0]
+        x, y = 0, 0
+        for i in range(1, num):
+            x, y = self.extgcd(bas, -m_list[i], a_list[i]-r)
+            r += bas * x
+            bas *= m_list[i]
+        return r % bas
     
     def doubling(self, n, m, modulo=0):
         y = 1
@@ -43,21 +76,61 @@ class NTT:
             p += 1
         return True
     
-    def extgcd(self, a, b, c):
-        if b < 0:
-            a, b, c = -a, -b, -c
-        x, y, u, v, k, l = 1, 0, 0, 1, a, b
-        while l:
-            x, y, u, v = u, v, x - u * (k // l), y - v * (k // l)
-            k, l = l, k % l
-        if c % k:
-            return "No Solution"
-        return x * c, y * c
+    def factorization(self, n):
+        a = n
+        D = []
+        p = 2
+        cnt = 0
+        while a % p == 0:
+            a //= p
+            cnt += 1
+        if cnt:
+            D.append([p, cnt])
+        p += 1
+        while a != 1:
+            cnt = 0
+            while a % p == 0:
+                cnt += 1
+                a //= p
+            if cnt:
+                D.append([p, cnt])
+            p += 2
+            if p * p > n and a != 1:
+                D.append([a, 1])
+                break
+        return D
     
+    def divisors(self, n, ordered=False):
+        res = [1]
+        D = self.factorization(n)
+        cnt = 1
+        for i in D:
+            tmp = i[0]
+            for j in range(i[1]):
+                for k in range(cnt):
+                    res.append(tmp*res[k])
+                tmp *= i[0]
+            cnt *= (i[1] + 1)
+        if ordered:
+            res.sort()
+        return res
+            
     def inved(self, a, modulo):
         x, y = self.extgcd(a, modulo, 1)
         return (x+modulo)%modulo
     
+    def make_fact(self, n, modulo):
+        if n > self.fact_cnt:
+            self.fact = self.fact[:] + [0]*(n-self.fact_cnt)
+            self.invf = self.invf[:] + [0]*(n-self.fact_cnt)
+            for i in range(self.fact_cnt, n):
+                self.fact[i+1] = self.fact[i] * (i + 1)
+                self.fact[i+1] %= modulo
+            self.invf[-1] = self.inved(self.fact[-1])
+            for i in range(n, self.fact_cnt, -1):
+                self.invf[i-1] = self.invf[i] * i
+                self.invf[i-1] %= modulo
+            
     def root_manual(self):
         for i in range(self.cr):
             r = 1
@@ -139,13 +212,3 @@ class NTT:
                 res[i] *= ipl
                 res[i] %= MOD
         return res
-    
-    def CRT(self, num, a_list, m_list):
-        r = a_list[0]
-        bas = m_list[0]
-        x, y = 0, 0
-        for i in range(1, num):
-            x, y = self.extgcd(bas, -m_list[i], a_list[i]-r)
-            r += bas * x
-            bas *= m_list[i]
-        return r % bas
