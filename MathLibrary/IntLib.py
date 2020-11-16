@@ -2,11 +2,14 @@ class IntLib:
     def __init__(self, convolution_rank, binary_level):
         self.cr = convolution_rank
         self.bl = binary_level
+        self.prev_mod = 0
         self.fact_cnt = 0
         self.fact = [1]
         self.invf = [1]
         self.modulo_list = [1]*convolution_rank
         self.primal_root_list = [1]*convolution_rank
+        self.bernouill_cnt = 2
+        self.bernouill = [[1, 1], [-1, 2], [1, 6]]
         self.bin_list = [1]*(binary_level+1)
         self.primal_base_matrix = [[0 for _ in range(binary_level+1)] for __ in range(convolution_rank)]
         self.inverse_base_matrix = [[0 for _ in range(binary_level+1)] for __ in range(convolution_rank)]
@@ -136,19 +139,26 @@ class IntLib:
         x, y = self.extgcd(a, modulo, 1)
         return (x+modulo)%modulo
     
-    def make_fact(self, n, modulo):
+    def make_fact(self, n, modulo=0):
+        if modulo != self.prev_mod:
+            self.fact_cnt = 0
+            self.fact = [1]
+            self.invf = [1]
+        self.prev_mod = modulo
         if n > self.fact_cnt:
             self.fact = self.fact[:] + [0]*(n-self.fact_cnt)
             self.invf = self.invf[:] + [0]*(n-self.fact_cnt)
             for i in range(self.fact_cnt, n):
                 self.fact[i+1] = self.fact[i] * (i + 1)
-                self.fact[i+1] %= modulo
-            self.invf[-1] = self.inved(self.fact[-1], modulo)
-            for i in range(n, self.fact_cnt, -1):
-                self.invf[i-1] = self.invf[i] * i
-                self.invf[i-1] %= modulo
+                if modulo:
+                    self.fact[i+1] %= modulo
+            if modulo:
+                self.invf[-1] = self.inved(self.fact[-1], modulo)
+                for i in range(n, self.fact_cnt, -1):
+                    self.invf[i-1] = self.invf[i] * i
+                    self.invf[i-1] %= modulo
             self.fact_cnt = n
-            
+    
     def root_manual(self):
         for i in range(self.cr):
             r = 1
@@ -231,16 +241,19 @@ class IntLib:
                 res[i] %= MOD
         return res
     
-    def frac_sum(self, f1, f2, weight=1):
+    def frac_sum(self, f1: list, f2: list, weight=1):
         if f1[1] == 0 or f2[1] == 0:
             raise ValueError("Division by zero. f1 = {}/{}, f2 = {}/{}".format(f1[0], f1[1], f2[0], f2[1])) from None
         f = [f1[0]*f2[1]+weight*f2[0]*f1[1], f1[1]*f2[1]]
         g = self.gcd(f[0], f[1])
         f[0] //= g
         f[1] //= g
+        if f[1] < 0:
+            f[0] = -f[0]
+            f[1] = -f[1]
         return f
     
-    def frac_prod(self, f1, f2, inverse=False):
+    def frac_prod(self, f1: list, f2: list, inverse=False):
         if inverse:
             f = [f1[0]*f2[1], f1[1]*f2[0]]
         else:
@@ -250,4 +263,21 @@ class IntLib:
         g = self.gcd(f[0], f[1])
         f[0] //= g
         f[1] //= g
+        if f[1] < 0:
+            f[0] = -f[0]
+            f[1] = -f[1]
         return f
+    
+    def get_bernouill(self, n):
+        self.make_fact(n+1)
+        if n > self.bernouill_cnt:
+            for i in range(self.bernouill_cnt, n):
+                self.bernouill.append([0, 1])
+            for i in range(self.bernouill_cnt+1, n+1):
+                if i % 2 == 0:
+                    for j in range(i):
+                        if j == 1 or j % 2 == 0:
+                            tmp = self.frac_sum([0, 1], [-self.fact[i], self.fact[i-j+1]*self.fact[j]])
+                            self.bernouill[i] = self.frac_sum(self.bernouill[i], self.frac_prod(self.bernouill[j], tmp))
+            self.bernouill_cnt = n
+        return self.bernouill[n]
