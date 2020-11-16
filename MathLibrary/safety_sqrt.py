@@ -1,4 +1,4 @@
-import IntLib as IL
+from IntLib import IntLib as IL
 
 class safety_sqrt:
     def parse_sqrt(self, n: int):
