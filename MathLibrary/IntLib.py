@@ -8,8 +8,8 @@ class IntLib:
         self.invf = [1]
         self.modulo_list = [1]*convolution_rank
         self.primal_root_list = [1]*convolution_rank
-        self.bernouill_cnt = 2
-        self.bernouill = [[1, 1], [-1, 2], [1, 6]]
+        self.bernouill_cnt = 0
+        self.bernouill = [1]
         self.bin_list = [1]*(binary_level+1)
         self.primal_base_matrix = [[0 for _ in range(binary_level+1)] for __ in range(convolution_rank)]
         self.inverse_base_matrix = [[0 for _ in range(binary_level+1)] for __ in range(convolution_rank)]
@@ -139,11 +139,13 @@ class IntLib:
         x, y = self.extgcd(a, modulo, 1)
         return (x+modulo)%modulo
     
-    def make_fact(self, n, modulo=0):
+    def make_fact(self, n, modulo):
         if modulo != self.prev_mod:
             self.fact_cnt = 0
             self.fact = [1]
             self.invf = [1]
+            self.bernouill_cnt = 0
+            self.bernouill = [1]
         self.prev_mod = modulo
         if n > self.fact_cnt:
             self.fact = self.fact[:] + [0]*(n-self.fact_cnt)
@@ -268,16 +270,35 @@ class IntLib:
             f[1] = -f[1]
         return f
     
-    def get_bernouill(self, n):
-        self.make_fact(n+1)
+    def get_bernouill(self, n, modulo):
+        if modulo <= 0 or not self.IsPrime(modulo):
+            raise RuntimeError("modulo value is invalid") from None
+        self.make_fact(n+1, modulo)
         if n > self.bernouill_cnt:
             for i in range(self.bernouill_cnt, n):
-                self.bernouill.append([0, 1])
+                self.bernouill.append(0)
             for i in range(self.bernouill_cnt+1, n+1):
-                if i % 2 == 0:
+                if i % 2 == 0 or i == 1:
                     for j in range(i):
                         if j == 1 or j % 2 == 0:
-                            tmp = self.frac_sum([0, 1], [-self.fact[i], self.fact[i-j+1]*self.fact[j]])
-                            self.bernouill[i] = self.frac_sum(self.bernouill[i], self.frac_prod(self.bernouill[j], tmp))
+                            tmp = (-self.fact[i]) * self.invf[i-j+1]*self.invf[j] % modulo
+                            self.bernouill[i] += self.bernouill[j]*tmp
+                            self.bernouill[i] %= modulo
             self.bernouill_cnt = n
         return self.bernouill[n]
+    
+    def power_sum(self, n, m, modulo):
+        bas = n
+        if modulo <= 0 or not self.IsPrime(modulo):
+            raise RuntimeError("modulo value is invalid") from None
+        S = 0
+        sign = 1 - 2 * (m % 2)
+        for i in range(m+1):
+            B = self.get_bernouill(m-i, modulo)
+            S += self.invf[i+1]*self.invf[m-i]*sign*B*bas%modulo
+            S %= modulo
+            bas *= n
+            bas %= modulo
+            sign *= -1
+            sign %= modulo
+        return S * self.fact[m] % modulo
