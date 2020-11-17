@@ -246,7 +246,8 @@ class IntLib:
     def get_bernouill(self, n, modulo):
         if modulo <= 0 or not self.IsPrime(modulo):
             raise RuntimeError("modulo value is invalid") from None
-        self.make_fact(n+1, modulo)
+        if n+1 > self.fact_cnt:
+            self.make_fact(n+1, modulo)
         if n > self.bernouill_cnt:
             for i in range(self.bernouill_cnt, n):
                 self.bernouill.append(0)
@@ -254,9 +255,11 @@ class IntLib:
                 if i % 2 == 0 or i == 1:
                     for j in range(i):
                         if j == 1 or j % 2 == 0:
-                            tmp = (-self.fact[i]) * self.invf[i-j+1]*self.invf[j] % modulo
-                            self.bernouill[i] += self.bernouill[j]*tmp
+                            tmp = self.invf[i-j+1]*self.invf[j] % modulo
+                            self.bernouill[i] += self.bernouill[j]*tmp%modulo
                             self.bernouill[i] %= modulo
+                    self.bernouill[i] *= -self.fact[i]
+                    self.bernouill[i] %= modulo
             self.bernouill_cnt = n
         return self.bernouill[n]
     
@@ -267,11 +270,13 @@ class IntLib:
         S = 0
         sign = 1 - 2 * (m % 2)
         for i in range(m+1):
-            B = self.get_bernouill(m-i, modulo)
-            S += self.invf[i+1]*self.invf[m-i]*sign*B*bas%modulo
+            if m-i > self.bernouill_cnt:
+                B = self.get_bernouill(m-i, modulo)
+            else:
+                B = self.bernouill[m-i]
+            S += (self.invf[i+1]*self.invf[m-i]%modulo)*(sign*B*bas%modulo)%modulo
             S %= modulo
             bas *= n
             bas %= modulo
             sign *= -1
-            sign %= modulo
         return S * self.fact[m] % modulo
