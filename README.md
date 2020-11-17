@@ -15,15 +15,15 @@
 |:--|:--|
 |RealTSP.py|わりと実用的な巡回セールスマン問題ソルバ|
 
+### MathLibrary
+|名称|概要|
+|:--|:--|
+|IntLib.py|いわゆるmodint|
+
 ### Matrix
 |名称|概要|
 |:--|:--|
 |MatrixCollections.py|行列のいろいろ|
-
-### NumberTheory
-|名称|概要|
-|:--|:--|
-|NTT.py|任意modに対応したNTT|
 
 ### Sequence
 |名称|概要|
