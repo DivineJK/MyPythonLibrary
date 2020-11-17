@@ -1,7 +1,11 @@
-from IntLib import IntLib as IL
+from IntLib import IntLib
+from Rational import Rational
+
+IL = IntLib(1, 27)
+RL = Rational()
 
 class safety_sqrt:
-    def parse_sqrt(self, n: int):
+    def parse_sqrt(self, n):
         sign = 1
         n1 = n
         if n == 0:
@@ -25,27 +29,27 @@ class safety_sqrt:
             tmp = 0
             for k in s:
                 tmp = k
-            r = IL.frac_prod(s[tmp], d[i])
+            r = RL.frac_prod(s[tmp], d[i])
             if i in new_d:
-                new_d[tmp] = IL.frac_sum(r, new_d[i])
+                new_d[tmp] = RL.frac_sum(r, new_d[i])
             else:
                 new_d[tmp] = r
         return new_d
-    def sqrt_sum(self, s1: dict, s2: dict, weight=1):
+    def sqrt_sum(self, s1, s2, weight=1):
         n1 = self.trim_sqrt(s1)
         n2 = self.trim_sqrt(s2)
         prev_res = {i: n1[i] for i in n1}
         for i in n2:
             if i in prev_res:
-                prev_res[i] = IL.frac_sum(prev_res[i], n2[i], weight)
+                prev_res[i] = RL.frac_sum(prev_res[i], n2[i], weight)
             else:
-                prev_res[i] = IL.frac_sum([0, 1], n2[i], weight)
+                prev_res[i] = RL.frac_sum([0, 1], n2[i], weight)
         res = {}
         for i in prev_res:
             if prev_res[i][0]:
                 res[i] = prev_res[i]
         return res
-    def sqrt_prod(self, s1: dict, s2: dict):
+    def sqrt_prod(self, s1, s2):
         n1 = self.trim_sqrt(s1)
         n2 = self.trim_sqrt(s2)
         prev_res = {}
@@ -58,11 +62,11 @@ class safety_sqrt:
                 tmp = 0
                 for k in s:
                     tmp = k
-                v = IL.frac_prod(n1[i], n2[j])
-                v = IL.frac_prod(v, s[tmp])
-                v = IL.frac_prod(v, [out_sign, 1])
+                v = RL.frac_prod(n1[i], n2[j])
+                v = RL.frac_prod(v, s[tmp])
+                v = RL.frac_prod(v, [out_sign, 1])
                 if tmp in prev_res:
-                    prev_res[tmp] = IL.frac_sum(v, prev_res[tmp])
+                    prev_res[tmp] = RL.frac_sum(v, prev_res[tmp])
                 else:
                     prev_res[tmp] = v
         res = {}
@@ -71,7 +75,7 @@ class safety_sqrt:
                 res[i] = prev_res[i]
         res = self.trim_sqrt(res)
         return res
-    def sqrt_inv(self, s: dict):
+    def sqrt_inv(self, s):
         s = self.trim_sqrt(s)
         if s == {}:
             raise RuntimeError("Division by zero.") from None
@@ -109,8 +113,8 @@ class safety_sqrt:
             right = self.sqrt_prod(right, right)
             d2 = self.sqrt_sum(left, right, -1)
         for i in d1:
-            d1[i] = IL.frac_prod(d1[i], d2[1], True)
+            d1[i] = RL.frac_prod(d1[i], d2[1], True)
         return d1
-    def sqrt_frac(self, s1: dict, s2: dict):
+    def sqrt_frac(self, s1, s2):
         s1 = self.trim_sqrt(s1)
         return self.sqrt_prod(s1, sqrt_inv(s2))
