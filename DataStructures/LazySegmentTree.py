@@ -14,14 +14,15 @@ class lazy_segment_tree:
         self.bin_top = 1 << self.cnt
         self.segtree = [identity]*(self.bin_top<<1)
         self.subtree = [upd_id]*(self.bin_top<<1)
+        self.zone = [1<<(self.cnt-len(bin(i))+3) for i in range(self.bin_top<<1)]
         if initial != []:
             for i in range(n):
                 self.segtree[i+self.bin_top] = initial[i]
                 tmp = i + self.bin_top
                 while tmp:
                     x = tmp >> 1
-                    self.segtree[x] = self.op(upd_id, self.segtree[x<<1], self.segtree[1+(x<<1)])
-                    tmp >> 1
+                    self.segtree[x] = self.op(self.segtree[x<<1], self.segtree[1+(x<<1)])
+                    tmp >>= 1
     def get_lower(self, l, r):
         L, R = l + self.bin_top, r + self.bin_top
         F = []
@@ -56,5 +57,46 @@ class lazy_segment_tree:
         lazy_d.sort()
         path_d.sort()
         for i, k in enumerate(path_d):
-            cc = len(bin(k))-3
-            self.segtree[k] = self.renew(1<<(self.cnt-cc), self.subtree[k])
+            tmp = k << 1
+            self.subtree[tmp] = self.renew(self.subtree[k], self.subtree[tmp])
+            self.subtree[1+tmp] = self.renew(self.subtree[k], self.subtree[1+(tmp)])
+            self.segtree[k] = self.upd(self.zone[k], self.subtree[k], self.segtree[k])
+            self.subtree[k] = self.upd_id
+        for i, k in enumerate(lazy_d):
+            self.subtree[k] = self.renew(x, self.subtree[k])
+        path_d.reverse()
+        for i, k in enumerate(path_d):
+            tmp = k << 1
+            left = self.upd(self.zone[tmp], self.subtree[tmp], self.segtree[tmp])
+            right = self.upd(self.zone[tmp], self.subtree[1+tmp], self.segtree[1+tmp])
+            self.segtree[k] = self.op(left, right)
+    def get_segment(self, l, r):
+        lazy_d = self.get_lower(l, r)
+        path_d = []
+        L, R = l + self.bin_top, r + self.bin_top
+        while L % 2 == 0:
+            L >>= 1
+        while R % 2 == 0:
+            R >>= 1
+        tmp = L >> 1
+        while tmp:
+            path_d.append(tmp)
+            tmp >>= 1
+        tmp = R >> 1
+        while tmp:
+            if tmp in path_d:
+                break
+            path_d.append(tmp)
+            tmp >>= 1
+        lazy_d.sort()
+        path_d.sort()
+        for i, k in enumerate(path_d):
+            tmp = k << 1
+            self.subtree[tmp] = self.renew(self.subtree[k], self.subtree[tmp])
+            self.subtree[1+tmp] = self.renew(self.subtree[k], self.subtree[1+tmp])
+            self.segtree[k] = self.upd(self.zone[k], self.subtree[k], self.segtree[k])
+            self.subtree[k] = self.upd_id
+        S = self.identity
+        for i, k in enumerate(lazy_d):
+            S = self.op(S, self.upd(self.zone[k], self.subtree[k], self.segtree[k]))
+        return S
