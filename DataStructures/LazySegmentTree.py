@@ -25,16 +25,19 @@ class lazy_segment_tree:
                     tmp >>= 1
     def get_lower(self, l, r):
         L, R = l + self.bin_top, r + self.bin_top
-        F = []
+        F1 = []
+        F2 = []
         while L < R:
             if L & 1:
-                F.append(L)
+                F1.append(L)
                 L += 1
             if R & 1:
-                F.append(R-1)
+                F2.append(R-1)
                 R -= 1
             L >>= 1
             R >>= 1
+        F2.reverse()
+        F = F1[:] + F2[:]
         return F
     def update(self, l, r, x):
         lazy_d = self.get_lower(l, r)
@@ -54,7 +57,6 @@ class lazy_segment_tree:
                 break
             path_d.append(tmp)
             tmp >>= 1
-        lazy_d.sort()
         path_d.sort()
         for i, k in enumerate(path_d):
             tmp = k << 1
@@ -88,7 +90,6 @@ class lazy_segment_tree:
                 break
             path_d.append(tmp)
             tmp >>= 1
-        lazy_d.sort()
         path_d.sort()
         for i, k in enumerate(path_d):
             tmp = k << 1
