@@ -1,5 +1,5 @@
 class IntLib:
-    def __init__(self, convolution_rank, binary_level):
+    def __init__(self, convolution_rank=1, binary_level=27):
         self.cr = convolution_rank
         self.bl = binary_level
         self.prev_mod = 0
