@@ -7,12 +7,15 @@
 ### DataStructures
 |名称|概要|
 |:--|:--|
+|FenwickTree.py|BIT|
+|LazySegmentTree.py|遅延評価付きセグメントツリー|
 |UnionFind.py|UnionFind|
 |segtree.py|ふつうのセグメントツリー（二分探索つき）|
 
 ### Graph
 |名称|概要|
 |:--|:--|
+|LCA.py|最小共通祖先|
 |RealTSP.py|わりと実用的な巡回セールスマン問題ソルバ|
 
 ### MathLibrary
