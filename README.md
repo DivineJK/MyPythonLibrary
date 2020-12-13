@@ -12,6 +12,11 @@
 |UnionFind.py|UnionFind|
 |segtree.py|ふつうのセグメントツリー（二分探索つき）|
 
+### Geometry
+|名称|概要|
+|:--|:--|
+|ArgumentSorting.py|偏角ソート|
+
 ### Graph
 |名称|概要|
 |:--|:--|
@@ -31,4 +36,5 @@
 ### Sequence
 |名称|概要|
 |:--|:--|
+|LexicographicalOrder.py|与えられた順列が辞書順で何番目かを求める|
 |LIS.py|最長単調増加列|
