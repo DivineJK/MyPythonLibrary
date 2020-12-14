@@ -10,5 +10,5 @@ for i in range(N):
 for i in range(M):
     SB[i+1] = SB[i] + B[i]
 for i in range(min(N, M)):
-    C2[i] = A[i]*B[i] + A[i]*(SB[M] - SB[i+1]) + B[i]*(SA[N] - SA[i+1])
-print(*C2)
+    C[i] = A[i]*B[i] + A[i]*(SB[M] - SB[i+1]) + B[i]*(SA[N] - SA[i+1])
+print(*C)
