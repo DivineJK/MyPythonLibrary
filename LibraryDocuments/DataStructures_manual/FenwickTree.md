@@ -22,6 +22,7 @@ Fenwick TreeもしくはBIT(Binary Indexed Tree)と呼ばれる木構造。
   <li>一点更新: O(logN)</li>
   <li>区間和の取得: O(logN)</li>
 </ul>
+
 ## 使用方法
 <ol>
   <li>ft = fenwick_tree(n, initial)で構築する。数列はinitialで初期化される。initialを指定しない場合、0で初期化される。</li>
