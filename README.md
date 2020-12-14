@@ -26,12 +26,21 @@
 ### MathLibrary
 |名称|概要|
 |:--|:--|
+|Convolution_max.py|maxの畳み込み|
+|Convolution_min.py|minの畳み込み|
 |IntLib.py|いわゆるmodint|
+|Rational.py|有理数演算|
+|safety_sqrt|2乗根を含む計算をfloat使わずにやる|
 
 ### Matrix
 |名称|概要|
 |:--|:--|
 |MatrixCollections.py|行列のいろいろ|
+
+### Others
+|名称|概要|
+|:--|:--|
+|ForStealth.py|コンテスト潜伏用プログラム|
 
 ### Sequence
 |名称|概要|
