@@ -6,6 +6,10 @@ class date_calc:
             self.days_sum[i+1] = self.days_sum[i] + self.days[i]
         self.leap_days = [365+(((i%100!=0)and(i%4==0))or(i%400==0)) for i in range(400)]
         self.leap_sum = [0]*401
+        self.serial_now = 738140 # 2020/12/16
+        self.week_id_now = 3 # Wednesday (== 3)
+        self.week_name = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+        self.week_short = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
         for i in range(400):
             self.leap_sum[i+1] = self.leap_sum[i] + self.leap_days[i]
     def IsLeap(self, n):
@@ -27,7 +31,7 @@ class date_calc:
         d += self.leap_sum[y%400]
         m = 0
         y = (y // 400) * 400
-        y += d // self.leap_sum[-1]
+        y += (d // self.leap_sum[-1]) * 400
         d %= self.leap_sum[-1]
         left, right = 0, 401
         mid = (left + right) // 2
@@ -58,6 +62,8 @@ class date_calc:
         # year = 1, month = 0 -> year = 0, month = 12
         # year = -1 -> year = 0
         # (year, month, day) = (0, 1, 1) -> serial = 0
+        if year < 0:
+            year += 1
         td = self.trim_date(year, month, day)
         y, m, d = td[0], td[1], td[2]
         d += self.days_sum[m]
@@ -67,3 +73,10 @@ class date_calc:
         y %= 400
         d += self.leap_sum[y]
         return d
+    def get_weekday(self, year, month, day, short=False):
+        if year < 0:
+            year += 1
+        ser = self.date_serial(year, month, day)
+        if short:
+            return self.week_short[(ser - self.serial_now + self.week_id_now) % 7]
+        return self.week_name[(ser - self.serial_now + self.week_id_now) % 7]
