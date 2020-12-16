@@ -33,7 +33,7 @@
 |IntLib.py|いわゆるmodint|
 |PrimeNumbers.py|エラトステネスのふるい|
 |Rational.py|有理数演算|
-|safety_sqrt|2乗根を含む計算をfloat使わずにやる|
+|safety_sqrt.py|2乗根を含む計算をfloat使わずにやる|
 
 ### Matrix
 |名称|概要|
