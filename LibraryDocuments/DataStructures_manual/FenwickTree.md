@@ -1,4 +1,4 @@
-# FenwickTree
+# Fenwick Tree
 
 ## 概要
 Fenwick TreeもしくはBIT(Binary Indexed Tree)と呼ばれる木構造。
