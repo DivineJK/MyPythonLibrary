@@ -1,7 +1,7 @@
-# Library_name
+# UnionFind
 
 ## 概要
-Union-Find Tree。素集合データ構造ともいうらしい。
+Union-Find tree。Disjoint set unionとか素集合データ構造ともいうらしい。
 根が同じかの判定、データの結合などを行う。
 
 ## 内容
