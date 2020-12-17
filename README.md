@@ -30,7 +30,7 @@
 |Convolution_min.py|minの畳み込み|
 |FMT.py|高速メビウス変換|
 |FZT.py|高速ゼータ変換|
-|IntLib.py|いわゆるmodint|
+|IntLib.py|整数演算いろいろ|
 |PrimeNumbers.py|エラトステネスのふるい|
 |Rational.py|有理数演算|
 |safety_sqrt.py|2乗根を含む計算をfloat使わずにやる|
