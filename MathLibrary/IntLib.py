@@ -11,8 +11,8 @@ class IntLib:
         self.bernouill_cnt = 0
         self.bernouill = [1]
         self.bin_list = [1]*(binary_level+1)
-        self.primal_base_matrix = [[0 for _ in range(binary_level+1)] for __ in range(convolution_rank)]
-        self.inverse_base_matrix = [[0 for _ in range(binary_level+1)] for __ in range(convolution_rank)]
+        self.primal_base_matrix = [[0]*(binary_level+1) for __ in range(convolution_rank)]
+        self.inverse_base_matrix = [[0]*(binary_level+1) for __ in range(convolution_rank)]
         for i in range(binary_level):
             self.bin_list[i+1] = self.bin_list[i] * 2
     
@@ -215,8 +215,8 @@ class IntLib:
                 self.inverse_base_matrix[i][j] = self.inved(self.primal_base_matrix[i][j], self.modulo_list[i])
     
     def NTT(self, f, n, idx, depth, inverse=False, surface=True):
-        res = [0 for _ in range(n)]
-        tmp = [0 for _ in range(n)]
+        res = [0]*n
+        tmp = [0]*n
         MOD = self.modulo_list[idx]
         ipl = self.inved(n, MOD)
         for i in range(n):
