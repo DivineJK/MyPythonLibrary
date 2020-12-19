@@ -170,6 +170,7 @@ class IntLib:
                 for j in range(self.bl):
                     if self.doubling(r, self.bin_list[j], self.modulo_list[i]) == 1:
                         fflg = False
+                        break
                 if self.doubling(r, self.bin_list[-1], self.modulo_list[i]) != 1:
                     fflg = False
                 if fflg:
@@ -193,6 +194,7 @@ class IntLib:
                     for i in range(self.bl):
                         if self.doubling(r, self.bin_list[i], j*last+1) == 1:
                             fflg = False
+                            break
                     if self.doubling(r, last, j*last+1) != 1:
                         fflg = False
                     if fflg:
