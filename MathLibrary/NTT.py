@@ -9,6 +9,15 @@ class NTT:
         self.inverse_base_matrix = [[0]*(binary_level+1) for __ in range(convolution_rank)]
         for i in range(binary_level):
             self.bin_list[i+1] = self.bin_list[i] * 2
+    def IsPrime(self, num):
+        p = 2
+        if num <= 1:
+            return False
+        while p * p <= num:
+            if num % p == 0:
+                return False
+            p += 1
+        return True
     def extgcd(self, a, b, c):
         if b < 0:
             a, b, c = -a, -b, -c
