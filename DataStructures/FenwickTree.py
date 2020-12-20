@@ -19,3 +19,5 @@ class fenwick_tree:
             S += self.ft[x]
             x = x & (x - 1)
         return S
+    def get_segment(self, l, r):
+        return self.ft_sum(r) - self.ft_sum(l)
