@@ -14,7 +14,8 @@ Fenwick TreeもしくはBIT(Binary Indexed Tree)と呼ばれる木構造。
 |関数名|引数の型|返り値の型|説明|
 |:-|:-|:-|:-|
 |ft_add|p: int, x: number|None|p番目の要素にxを加算する。|
-|ft_sum|x: int|number|区間[1, x]間の和を求める。|
+|ft_sum|x: int|number|区間\[0, x\)の和を求める。|
+|get_segment|l: int, r: int|number|区間\[l, r\)の和を求める。|
 
 ## 時間計算量
 <ul>
@@ -27,11 +28,10 @@ Fenwick TreeもしくはBIT(Binary Indexed Tree)と呼ばれる木構造。
 <ol>
   <li>ft = fenwick_tree(n, initial)で構築する。数列はinitialで初期化される。initialを指定しない場合、全ての要素は0で初期化される。</li>
   <li>ft.ft_add(p, x)で一点加算を行う。</li>
-  <li>ft.ft_sum(x)で区間和を取得できる。</li>
+  <li>ft.get_segment(l, r)で区間和を取得できる。</li>
 </ol>
 
 ## 使用上の注意点
 <ul>
-  <li>数列の添字は1-indexedとする。</li>
   <li>initialの長さはnに一致させる。そうしない場合、Runtime Errorとなる場合がある。</li>
 </ul>
