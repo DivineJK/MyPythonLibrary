@@ -17,12 +17,18 @@ class IntLib:
     def extgcd(self, a, b, c):
         if b < 0:
             a, b, c = -a, -b, -c
+        tk, tl = a, b
+        while tl:
+            tk, tl = tl, tk % tl
+        if c % tk:
+            return "No Solution"
+        a //= tk
+        b //= tk
+        c //= tk
         x, y, u, v, k, l = 1, 0, 0, 1, a, b
         while l:
             x, y, u, v = u, v, x - u * (k // l), y - v * (k // l)
             k, l = l, k % l
-        if c % k:
-            return "No Solution"
         return x * c, y * c
     def CRT(self, num, a_list, m_list):
         r = a_list[0]
