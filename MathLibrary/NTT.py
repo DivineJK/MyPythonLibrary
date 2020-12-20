@@ -24,7 +24,7 @@ class NTT:
         tk, tl = a, b
         while tl:
             tk, tl = tl, tk % tl
-        if c % k:
+        if c % tk:
             return "No Solution"
         a //= tk
         b //= tk
