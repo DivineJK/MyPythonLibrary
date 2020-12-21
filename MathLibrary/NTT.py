@@ -82,8 +82,8 @@ class NTT:
             self.primal_root_list[i] = r
     def make_prime_root(self):
         cnt = 0
-        j = self.modulo_minimum // 2 + 1
         last = self.bin_list[-1]
+        j = self.modulo_minimum // last
         while cnt < self.cr:
             if self.IsPrime(j*last+1):
                 flg = True
