@@ -1,5 +1,5 @@
 class NTT:
-    def __init__(self, convolution_rank=1, binary_level=27, modulo_minimum=0):
+    def __init__(self, convolution_rank=1, binary_level=27, modulo_minimum=1):
         self.cr = convolution_rank
         self.bl = binary_level
         self.modulo_minimum = modulo_minimum
@@ -83,7 +83,9 @@ class NTT:
     def make_prime_root(self):
         cnt = 0
         last = self.bin_list[-1]
-        j = self.modulo_minimum // last
+        j = (self.modulo_minimum-1) // last
+        if j % 2 == 0:
+            j += 1
         while cnt < self.cr:
             if self.IsPrime(j*last+1):
                 flg = True
