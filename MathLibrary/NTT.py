@@ -1,7 +1,8 @@
 class NTT:
-    def __init__(self, convolution_rank=1, binary_level=27):
+    def __init__(self, convolution_rank=1, binary_level=27, modulo_minimum=0):
         self.cr = convolution_rank
         self.bl = binary_level
+        self.modulo_minimum = modulo_minimum
         self.modulo_list = [1]*convolution_rank
         self.primal_root_list = [1]*convolution_rank
         self.bin_list = [1]*(binary_level+1)
@@ -60,27 +61,6 @@ class NTT:
     def inved(self, a, modulo):
         x, y = self.extgcd(a, modulo, 1)
         return (x+modulo)%modulo
-    def make_fact(self, n, modulo):
-        if modulo != self.prev_mod:
-            self.fact_cnt = 0
-            self.fact = [1]
-            self.invf = [1]
-            self.bernouill_cnt = 0
-            self.bernouill = [1]
-        self.prev_mod = modulo
-        if n > self.fact_cnt:
-            self.fact = self.fact[:] + [0]*(n-self.fact_cnt)
-            self.invf = self.invf[:] + [0]*(n-self.fact_cnt)
-            for i in range(self.fact_cnt, n):
-                self.fact[i+1] = self.fact[i] * (i + 1)
-                if modulo:
-                    self.fact[i+1] %= modulo
-            if modulo:
-                self.invf[-1] = self.inved(self.fact[-1], modulo)
-                for i in range(n, self.fact_cnt, -1):
-                    self.invf[i-1] = self.invf[i] * i
-                    self.invf[i-1] %= modulo
-            self.fact_cnt = n
     def root_manual(self):
         for i in range(self.cr):
             r = 1
@@ -102,7 +82,7 @@ class NTT:
             self.primal_root_list[i] = r
     def make_prime_root(self):
         cnt = 0
-        j = 1
+        j = self.modulo_minimum // 2 + 1
         last = self.bin_list[-1]
         while cnt < self.cr:
             if self.IsPrime(j*last+1):
