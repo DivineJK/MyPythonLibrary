@@ -52,8 +52,8 @@ a, b, cをセグ木にのせる要素とすると、op(op(a, b), c) = op(a, op(b
 <ol>
     <li>二項演算op、区間更新の演算upd、遅延部分の更新の演算renewを定義する。</li>
     <li>lst = lazy_segment_tree(n, op, identity, upd, upd_id, renew, initial)で構築。initial==[]のときは、要素はidentityで更新される。</li>
-    <li>lst.update(l, r, x)で区間\[l, r\)をxによって更新。</li>
-    <li>lst.get_segment(l, r)で区間\[l, r\)の区間積を取得。</li>
+    <li>lst.update(l, r, x)で区間[l, r)をxによって更新。</li>
+    <li>lst.get_segment(l, r)で区間[l, r)の区間積を取得。</li>
 </ol>
 
 ## 使用上の注意点
