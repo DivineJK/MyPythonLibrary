@@ -57,4 +57,6 @@ a, b, cをセグ木にのせる要素とすると、op(op(a, b), c) = op(a, op(b
 </ol>
 
 ## 使用上の注意点
-<ul>ACLBC-Eが解けません。</ul>
+<ul>
+    <li><s>ACLBC-Eが解けません。</s> ACLBC-Eを通せました。(更新：2020 12/25)</li>
+</ul>
