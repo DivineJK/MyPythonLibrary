@@ -1,6 +1,6 @@
 from IntLib import IntLib
 
-IL = IntLib(1, 10)
+IL = IntLib()
 
 class Rational:
     def __init__(self):
