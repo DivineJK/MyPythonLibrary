@@ -1,7 +1,7 @@
 from IntLib import IntLib
 from Rational import Rational
 
-IL = IntLib(1, 27)
+IL = IntLib()
 RL = Rational()
 
 class safety_sqrt:
