@@ -1,12 +1,24 @@
-def conv_xor(n, f, g):
+def inved(a):
+    x, y, u, v, k, l = 1, 0, 0, 1, a, mod
+    while l:
+        x, y, u, v, k, l = u, v, x - u * (k // l), y - v * (k // l), l, k % l
+    return x % mod
+def fht(f, n, inverse=False):
     if n == 1:
-        return [f[0]*g[0]]
+        return f
+    if n == 2:
+        ipl = inved(2)
+        if inverse:
+            return [ipl * (f[0] + f[1]) % mod, ipl * (f[0] - f[1]) % mod]
+        return [(f[0] + f[1]) % mod, (f[0] - f[1]) % mod]
     f0 = [f[i] for i in range(n//2)]
     f1 = [f[i] for i in range(n//2, n)]
-    g0 = [g[i] for i in range(n//2)]
-    g1 = [g[i] for i in range(n//2, n)]
-    x00 = conv_xor(n//2, f0, g0)
-    x01 = conv_xor(n//2, f0, g1)
-    x10 = conv_xor(n//2, f1, g0)
-    x11 = conv_xor(n//2, f1, g1)
-    return [x00[i]+x11[i] for i in range(n//2)] + [x01[i]+x10[i] for i in range(n//2)]
+    x0 = fht(f0, n//2)
+    x1 = fht(f1, n//2)
+    x = [(x0[i]+x1[i]) % mod for i in range(n//2)] + [(x0[i]-x1[i]) % mod for i in range(n//2)]
+    if inverse:
+        ipl = inved(n)
+        for i in range(n):
+            x[i] *= ipl
+            x[i] %= mod
+    return x
