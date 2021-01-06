@@ -4,9 +4,9 @@ class NTT:
         self.bl = binary_level
         self.modulo_minimum = modulo_minimum
         self.modulo_list = [1]*convolution_rank
-        self.primal_root_list = [1]*convolution_rank
+        self.primitive_root_list = [1]*convolution_rank
         self.bin_list = [1]*(binary_level+1)
-        self.primal_base_matrix = [[0]*(binary_level+1) for __ in range(convolution_rank)]
+        self.primitive_base_matrix = [[0]*(binary_level+1) for __ in range(convolution_rank)]
         self.inverse_base_matrix = [[0]*(binary_level+1) for __ in range(convolution_rank)]
         for i in range(binary_level):
             self.bin_list[i+1] = self.bin_list[i] * 2
@@ -79,8 +79,8 @@ class NTT:
                     r += 1
                     if r >= self.modulo_list[i]:
                         break
-            self.primal_root_list[i] = r
-    def make_prime_root(self):
+            self.primitive_root_list[i] = r
+    def make_primitive_root(self):
         cnt = 0
         last = self.bin_list[-1]
         j = (self.modulo_minimum-1) // last
@@ -106,15 +106,15 @@ class NTT:
                             break
                 if flg==False:
                     self.modulo_list[cnt] = j*last+1
-                    self.primal_root_list[cnt] = r
+                    self.primitive_root_list[cnt] = r
                     cnt += 1
             j += 2
     def make_basis(self):
         for i in range(self.cr):
             for j in range(self.bl):
                 tmp = self.doubling(2, self.bl-j)
-                self.primal_base_matrix[i][j] = self.doubling(self.primal_root_list[i], tmp, self.modulo_list[i])
-                self.inverse_base_matrix[i][j] = self.inved(self.primal_base_matrix[i][j], self.modulo_list[i])
+                self.primitive_base_matrix[i][j] = self.doubling(self.primitive_root_list[i], tmp, self.modulo_list[i])
+                self.inverse_base_matrix[i][j] = self.inved(self.primitive_base_matrix[i][j], self.modulo_list[i])
     def simply_ntt(self, f, n, idx, depth, inverse=False, surface=True):
         res = [0]*n
         tmp = [0]*n
@@ -129,7 +129,7 @@ class NTT:
             res[i] = f[pos]
         for i in range(depth):
             grow = 1
-            seed = inverse * self.primal_base_matrix[idx][i+1] + (1 - inverse) * self.inverse_base_matrix[idx][i+1]
+            seed = inverse * self.primitive_base_matrix[idx][i+1] + (1 - inverse) * self.inverse_base_matrix[idx][i+1]
             for k in range(1<<i):
                 for j in range(1<<(depth-i-1)):
                     tmp[j*(1<<(i+1))+k+0*(1<<i)] = (res[j*(1<<(i+1))+k] + grow * res[j*(1<<(i+1))+k+(1<<i)]) % MOD
