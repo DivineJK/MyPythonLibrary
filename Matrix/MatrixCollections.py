@@ -128,6 +128,58 @@ class matrix_collections:
             bas = self.mat_prod(bas, bas, modulo)
             tmp >>= 1
         return res
+    def determinant(self, a, modulo=0):
+        if not self.ismatrix(a):
+            raise Exception("strange input: a = {}".format(a))
+        if len(a[0]) != len(a):
+            raise Exception("size of matrix is invalid for matrix power")
+        n = len(a)
+        mid = self.zeros(n, n)
+        res = 1
+        for i in range(n):
+            for j in range(n):
+                if modulo and type(mid[i][j]) != int:
+                    raise Exception("value error: mid[{}][{}] = {}".format(i, j, mid[i][j]))
+                mid[i][j] = a[i][j]
+                if modulo:
+                    mid[i][j] %= modulo
+        for i in range(n):
+            pnt = i
+            while mid[pnt][i] == 0:
+                pnt += 1
+                if pnt == n:
+                    res = 0
+                    break
+            if res == 0:
+                break
+            if i != pnt:
+                if modulo:
+                    res *= modulo - 1
+                    res %= modulo
+                else:
+                    res *= -1
+            for j in range(n):
+                mid[i][j], mid[pnt][j] = mid[pnt][j], mid[i][j]
+            tmp = mid[i][i]
+            res *= tmp
+            if modulo:
+                res %= modulo
+                tmp = self.inved(mid[i][i], modulo)
+            for j in range(i, n):
+                if modulo:
+                    mid[i][j] *= tmp
+                    mid[i][j] %= modulo
+                else:
+                    mid[i][j] /= tmp
+            for j in range(i+1, n):
+                tmp1 = mid[j][i]
+                for k in range(i, n):
+                    if modulo:
+                        mid[j][k] -= tmp1 * mid[i][k]
+                        mid[j][k] %= modulo
+                    else:
+                        mid[j][k] -= tmp1 * mid[i][k]
+        return res
     def kronecker_product(self, a, b, modulo=0):
         if not (self.ismatrix(a) and self.ismatrix(b)):
             raise Exception("strange input{}: a = {}, b = {}".format('s'*(self.ismatrix(a)+self.ismatrix(b)==0), a, b))
