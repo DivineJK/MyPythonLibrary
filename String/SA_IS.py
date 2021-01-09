@@ -1,8 +1,14 @@
 def stola(s):
+    if len(s) == 0:
+        return [0]
     v = []
+    m = 0
     for i, k in enumerate(s):
-        v.append(ord(k)-33)
-    return v[:] + [0]
+        v.append(ord(k))
+        if i == 0:
+            m = v[0]
+        m = min(v[i], m)
+    return v[:] + [m-1]
 def bucket_sort(v, ls, seed):
     n = len(v)
     m = len(seed)
