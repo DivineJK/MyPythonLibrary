@@ -85,7 +85,6 @@ def suffix_array(s):
         if lms[sa[i]]:
             sa_lms[pnt] = sa[i]
             pnt += 1
-    #print(sa_lms)
     new_lms = [-1]*lms_cnt
     new_lms[inv_lms_idx[sa_lms[0]]] = 0
     num = 0
@@ -101,23 +100,36 @@ def suffix_array(s):
         if flg:
             num += 1
         new_lms[inv_lms_idx[sa_lms[i]]] = num
-        #print(prev, new_lms, sa_lms[i], flush=True)
         prev = sa_lms[i]
     seed = [0]*lms_cnt
     nums = [0]*lms_cnt
     if num + 1 < lms_cnt:
         nums = suffix_array(new_lms)
-        #print(True, *new_lms, lms_cnt)
     else:
-        #print(False, *new_lms, lms_cnt)
-        #for i in range(lms_cnt):
-        #    new_lms[i] -= 1
-        #print(*new_lms, flush=True)
         for i in range(lms_cnt):
             nums[new_lms[i]] = i
-    #print(inv_lms_idx, lms_cnt, new_lms, flush=True)
     for i in range(lms_cnt):
         seed[i] = lms_idx[nums[i]]
     #print(*new_lms, flush=True)
     sa = bucket_sort(v, ls, seed)
     return sa
+def lcp(s, sa=[]):
+    st = stola(s)
+    if sa == []:
+        sa = suffix_array(st)
+    n = len(sa)
+    inv_sa = [0]*n
+    for i in range(n):
+        inv_sa[sa[i]] = i
+    lcp_arr = [0]*n
+    h = 0
+    for i in range(n):
+        if h > 0:
+            h -= 1
+        if inv_sa[i] == 0:
+            continue
+        j = sa[inv_sa[i]-1]
+        while j + h < n and i + h < n and st[i+h] == st[j+h]:
+            h += 1
+        lcp_arr[inv_sa[i] - 1] = h
+    return lcp_arr
