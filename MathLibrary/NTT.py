@@ -115,7 +115,7 @@ class NTT:
                 tmp = self.doubling(2, self.bl-j)
                 self.primitive_base_matrix[i][j] = self.doubling(self.primitive_root_list[i], tmp, self.modulo_list[i])
                 self.inverse_base_matrix[i][j] = self.inved(self.primitive_base_matrix[i][j], self.modulo_list[i])
-    def simply_ntt(self, f, n, idx, depth, inverse=False, surface=True):
+    def simply_ntt(self, f, n, idx, depth, inverse=False):
         res = [0]*n
         tmp = [0]*n
         MOD = self.modulo_list[idx]
