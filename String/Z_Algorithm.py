@@ -4,8 +4,6 @@ def z_algorithm(s):
     c = 0
     for i in range(1, n):
         if i + z[i-c] < c + z[c]:
-            # reusing results
-            # 
             z[i] = z[i-c]
         else:
             j = max(0, c + z[c] - i)
