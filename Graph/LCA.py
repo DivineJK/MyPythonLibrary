@@ -1,6 +1,11 @@
 class LCA:
-    def __init__(self, n):
+    def __init__(self, n, counter=[]):
         self.n = n
+        self.counter = [0]*n
+        self.cumulative_counter = [0]*n
+        if len(counter) == n:
+            for i in range(n):
+                self.counter[i] = counter[i]
         self.bin_top = len(bin(n))-1
         self.graph = [[] for _ in range(n)]
         self.parent = [[-1]*n for _ in range(self.bin_top)]
@@ -26,6 +31,7 @@ class LCA:
         pnt = 0
         cnt = 1
         self.depth[a] = 0
+        self.cumulative_counter[a] = self.counter[a]
         d = 0
         while pnt < cnt:
             m = cnt
@@ -34,6 +40,7 @@ class LCA:
                 c = p[i]
                 for j in self.graph[c]:
                     if flg[j]:
+                        self.cumulative_counter[j] = self.cumulative_counter[c] + self.counter[j]
                         self.depth[j] = d
                         self.cost[j] = self.cost[c] + self.distD[c*self.n+j]
                         self.parent[0][j] = c
