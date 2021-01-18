@@ -15,7 +15,7 @@
 ### Geometry
 |名称|概要|
 |:--|:--|
-|ArgumentSorting.py|偏角ソート|
+|ArgSort.py|偏角ソート|
 
 ### Graph
 |名称|概要|
