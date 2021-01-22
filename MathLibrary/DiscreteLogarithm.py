@@ -38,9 +38,6 @@ class discrete_log:
         y *= c
         y += k * a
         return x, y
-    def inved(self, a, modulo):
-        x = self.extgcd(a, modulo, 1)[0] % modulo
-        return x
     def ext_inved(self, a, c, modulo):
         return self.extgcd(a, modulo, c)[0] % modulo
     def factorization(self, n):
@@ -94,15 +91,6 @@ class discrete_log:
                 res *= a - 1
                 break
         return res
-    def CRT(self, num, a_list, m_list):
-        r = a_list[0]
-        bas = m_list[0]
-        x, y = 0, 0
-        for i in range(1, num):
-            x, y = self.extgcd(bas, -m_list[i], a_list[i]-r)
-            r += bas * x
-            bas *= m_list[i]
-        return r % bas
     def generalized_bsgs(self, n, x, y):
         if x == 0:
             if y == 0:
@@ -131,6 +119,8 @@ class discrete_log:
                 return i
             bas *= x
             bas %= n
+        if y % self.gcd(bas, n) != 0:
+            return -1
         loop = fMp
         for i, k in enumerate(div_fMp):
             if bas*pow(x, k, n)%n == bas:
@@ -163,8 +153,6 @@ class discrete_log:
                 f *= x
                 f %= n
         g = y
-        if y % self.gcd(bas, n) != 0:
-            return -1
         for i in range(m):
             if g in self.baby_dict:
                 return i * m + self.baby_dict[g] + tail
