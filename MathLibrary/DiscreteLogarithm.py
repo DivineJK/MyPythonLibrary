@@ -171,9 +171,3 @@ class discrete_log:
             g *= b
             g %= n
         return -1
-dl = discrete_log()
-T = int(input())
-while T:
-    T -= 1
-    X, Y, M = map(int, input().split())
-    print(dl.generalized_bsgs(M, X, Y))
