@@ -79,21 +79,31 @@ class tsp_solver:
                     self.prev[x*self.n+i] = r
         for i in range(self.k):
             self.sub_cost[x*self.n+i] = self.cost[x*self.n+self.chkp[i]]
-    def tsp_part(self, bit, v):
-        if self.routes[v][bit] >= 0:
-            return self.routes[v][bit]
-        if bit == (1 << v):
-            self.routes[v][bit] = 0
-            return 0
-        res = self.INF
-        prev_bit = bit & ~(1 << v)
-        p = -1
-        for i in range(self.k):
-            if (1 << i) & prev_bit:
-                tmp = self.tsp_part(prev_bit, i)
-                if res > tmp + self.sub_cost[i][v]:
-                    res = tmp + self.sub_cost[i][v]
-                    p = i
-        self.routes[v][bit] = res
-        self.prev_r[v][bit] = p
-        return self.routes[v][bit]
+    def tsp_second(self, v=-1, roundtrip=False):
+        if v < 0:
+            for i in range(self.k):
+                self.routes[i][1<<i] = 0
+        else:
+            self.routes[v][1<<v] = 0
+        for bit in range(1<<self.k):
+            for i in range(self.k):
+                if self.routes[i][bit] == self.INF:
+                    continue
+                for j in range(self.k):
+                    if bit & (1 << j):
+                        continue
+                    if self.routes[j][bit^(1<<j)] > self.routes[i][bit] + self.sub_cost[i][j]:
+                        self.routes[j][bit^(1<<j)] = self.routes[i][bit] + self.sub_cost[i][j]
+                        self.prev_r[j][bit^(1<<j)] = i
+        if roundtrip:
+            res = self.INF
+            for i in range(self.k):
+                if v >= 0:
+                    if res > self.routes[i][-1] + self.sub_cost[i][v]:
+                        res = self.routes[i][-1] + self.sub_cost[i][v]
+                    continue
+                for j in range(self.k):
+                    if res > self.routes[i][-1] + self.sub_cost[i][j]:
+                        res = self.routes[i][-1] + self.sub_cost[i][j]
+            return res
+        return min(i[-1] for i in self.routes)
