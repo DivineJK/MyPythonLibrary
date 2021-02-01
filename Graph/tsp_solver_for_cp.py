@@ -78,7 +78,7 @@ class tsp_solver:
                     heappush(pq, (self.cost[x*self.n+i], i))
                     self.prev[x*self.n+i] = r
         for i in range(self.k):
-            self.sub_cost[x*self.n+i] = self.cost[x*self.n+self.chkp[i]]
+            self.sub_cost[x][i] = self.cost[x*self.n+self.chkp[i]]
     def tsp_second(self, v=-1, roundtrip=False):
         if v < 0:
             for i in range(self.k):
