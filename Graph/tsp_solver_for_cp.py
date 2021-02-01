@@ -34,11 +34,11 @@ class tsp_solver:
         for i in range(self.k):
             self.sub_cost[i].append(self.INF)
             for j in range(1<<self.k):
-                self.routes[i].append(-1)
+                self.routes[i].append(self.INF)
                 self.prev_r[i].append(-1)
         self.k += 1
         self.sub_cost.append([self.INF]*self.k)
-        self.routes.append([-1]*(1<<self.k))
+        self.routes.append([self.INF]*(1<<self.k))
         self.prev_r.append([-1]*(1<<self.k))
     def bfs(self, x):
         p = self.chkp[x]
