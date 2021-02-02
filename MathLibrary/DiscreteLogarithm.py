@@ -63,8 +63,8 @@ class discrete_log:
                 break
         return res
     def divisors(self, n):
-        L = [1]
-        p = 2
+        L = []
+        p = 1
         c = 1
         while p * p <= n:
             if n % p == 0:
