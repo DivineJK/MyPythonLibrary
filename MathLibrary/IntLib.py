@@ -39,20 +39,6 @@ class IntLib:
             r += bas * x
             bas *= m_list[i]
         return r % bas
-    def doubling(self, n, m, modulo=0):
-        y = 1
-        tmp = m
-        bas = n
-        while tmp:
-            if tmp % 2:
-                y *= bas
-                if modulo:
-                    y %= modulo
-            bas *= bas
-            if modulo:
-                bas %= modulo
-            tmp >>= 1
-        return y
     def powlimit(self, n):
         y = 1
         cnt = 0
