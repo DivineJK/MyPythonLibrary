@@ -148,8 +148,7 @@ class discrete_log:
             self.prev_inv = b
             f = bas
             for i in range(m):
-                if f not in self.baby_dict:
-                    self.baby_dict[f] = i
+                self.baby_dict[f] = i
                 f *= x
                 f %= n
         g = y
