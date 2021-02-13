@@ -97,7 +97,7 @@ def totient(n):
             res *= a - 1
             break
     return res
-def rep_unit(p, l, modulo=0):
+def repunit(p, l, modulo=0):
     res = 0
     bas = 1
     if modulo:
