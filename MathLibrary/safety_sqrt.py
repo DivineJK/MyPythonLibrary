@@ -163,6 +163,18 @@ class safety_sqrt:
         for i in d1:
             d1[i] = self.frac_prod(d1[i], d2[1], True)
         return d1
+    def sqrt_pow(self, s, n):
+        res = {1: [1, 1]}
+        bas = {i: s[i] for i in s}
+        if n < 0:
+            bas = self.sqrt_inv(bas)
+            n = -n
+        while n:
+            if n & 1:
+                res = self.sqrt_prod(res, bas)
+            bas = self.sqrt_prod(bas, bas)
+            n >>= 1
+        return res
     def sqrt_frac(self, s1, s2):
         s1 = self.trim_sqrt(s1)
         return self.sqrt_prod(s1, sqrt_inv(s2))
