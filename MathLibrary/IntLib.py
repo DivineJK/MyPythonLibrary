@@ -28,6 +28,11 @@ def extgcd(a, b, c):
     x = c*x % b
     y = (c-a*x)//b
     return x, y
+def inved(a, modulo):
+    x, y, u, v, k, l = 1, 0, 0, 1, a, modulo
+    while l:
+        x, y, u, v, k, l = u, v, x - u * (k // l), y - v * (k // l), l, k % l
+    return x%modulo
 def CRT(num, a_list, m_list):
     for i in range(num):
         x, y = extgcd(bas, -m_list[i], a_list[i]-r)
