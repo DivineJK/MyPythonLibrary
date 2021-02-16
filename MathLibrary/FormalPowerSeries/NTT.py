@@ -6,8 +6,6 @@ class NTT:
         self.modulo_list = [1]*convolution_rank
         self.primitive_root_list = [1]*convolution_rank
         self.bin_list = [1]*(binary_level+1)
-        self.primitive_base_matrix = [[0]*(binary_level+1) for __ in range(convolution_rank)]
-        self.inverse_base_matrix = [[0]*(binary_level+1) for __ in range(convolution_rank)]
         for i in range(binary_level):
             self.bin_list[i+1] = self.bin_list[i] << 1
     def IsPrime(self, num):
@@ -46,6 +44,8 @@ class NTT:
         y = (c-a*x)//b
         return x, y
     def CRT(self, num, a_list, m_list):
+        bas = 1
+        r = 0
         for i in range(num):
             x, y = self.extgcd(bas, -m_list[i], a_list[i]-r)
             if x < 0:
@@ -54,8 +54,10 @@ class NTT:
             bas *= m_list[i]
         return r % bas
     def inved(self, a, modulo):
-        x, y = self.extgcd(a, modulo, 1)
-        return (x+modulo)%modulo
+        x, y, u, v, k, l = 1, 0, 0, 1, a, modulo
+        while l:
+            x, y, u, v, k, l = u, v, x - u * (k // l), y - v * (k // l), l, k % l
+        return x%modulo
     def root_manual(self):
         for i in range(self.cr):
             r = 1
@@ -104,53 +106,51 @@ class NTT:
                     self.primitive_root_list[cnt] = r
                     cnt += 1
             j += 2
-    def make_basis(self):
-        for i in range(self.cr):
-            for j in range(self.bl):
-                tmp = pow(2, self.bl-j)
-                self.primitive_base_matrix[i][j] = pow(self.primitive_root_list[i], tmp, self.modulo_list[i])
-                self.inverse_base_matrix[i][j] = self.inved(self.primitive_base_matrix[i][j], self.modulo_list[i])
-    def simply_ntt(self, f, idx, inverse=False):
-        fl = len(f)
-        n = 1
-        depth = 0
-        while n < fl:
-            n <<= 1
-            depth += 1
+    def simply_ntt(self, f, n, MOD, root):
+        if n == 1:
+            return f
+        depth = len(bin(n))-3
         res = [0]*n
-        tmp = [0]*n
-        MOD = self.modulo_list[idx]
-        ipl = self.inved(n, MOD)
-        for i in range(n):
-            bas = 1
-            pos = 0
-            for j in range(depth, 0, -1):
-                pos += bas * ((i>>(j-1)) & 1)
-                bas <<= 1
+        res[0] = f[0]
+        pos = 0
+        for i in range(1, n):
+            pnt = n >> 1
+            c = pnt
+            while pos & pnt:
+                pnt >>= 1
+                c += pnt
+            pos ^= c
             res[i] = f[pos]
         left = 2
         right = 1
         thgir = 1 << (depth - 1)
+        base_list = [1]*(self.bl+1)
+        base_list[-1] = self.inved(root, MOD)
+        for i in range(self.bl, 0, -1):
+            base_list[i-1] = base_list[i] * base_list[i] % MOD
         for i in range(depth):
             grow = 1
-            seed = self.inverse_base_matrix[idx][i+1]
-            if inverse:
-                seed = self.primitive_base_matrix[idx][i+1]
+            seed = base_list[i+1]
             for k in range(right):
+                idx_l = k
+                idx_r = k + right
                 for j in range(thgir):
-                    idx_l = j*left+k
-                    idx_r = j*left+k+right
-                    tmp[idx_l] = (res[idx_l] + grow * res[idx_r]) % MOD
-                    tmp[idx_r] = (res[idx_l] - grow * res[idx_r]) % MOD
+                    u = res[idx_l]
+                    v = res[idx_r] * grow % MOD
+                    res[idx_l] = (u + v) % MOD
+                    res[idx_r] = (u - v) % MOD
+                    idx_l += left
+                    idx_r += left
                 grow *= seed
                 grow %= MOD
             left <<= 1
             right <<= 1
             thgir >>= 1
-            for j in range(n):
-                res[j] = tmp[j]
-        if inverse:
-            for i in range(n):
-                res[i] *= ipl
-                res[i] %= MOD
+        return res
+    def inverse_ntt(self, f, n, MOD, root):
+        res = self.simply_ntt(f, n, MOD, self.inved(root, MOD))
+        ipl = self.inved(n, MOD)
+        for i in range(n):
+            res[i] *= ipl
+            res[i] %= MOD
         return res
