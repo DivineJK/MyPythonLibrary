@@ -1,4 +1,4 @@
-def integrate(f, modulo):
+def integrate(f, MOD=MOD_free):
     n = len(f)
     if n == 1:
         return [0]
@@ -6,8 +6,7 @@ def integrate(f, modulo):
     invn = [1, 1]
     res[1] = f[0]
     for i in range(2, n):
-        invn.append((modulo-1)*invn[modulo%i]%modulo)
-        invn[i] *= modulo // i
-        invn[i] %= modulo
-        res[i] = f[i-1] * invn[i] % modulo
+        invn.append((MOD-1)*invn[MOD%i]%MOD)
+        invn[i] = (invn[i] * (MOD // i)) % MOD
+        res[i] = f[i-1] * invn[i] % MOD
     return res
