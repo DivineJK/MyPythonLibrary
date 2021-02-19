@@ -88,15 +88,16 @@ class combinations:
             self.fact = [1]
             self.invf = [1]
             self.invn = [1]
-        for i in range(self.max_fact, n):
-            self.fact.append(1)
-            self.invn.append(1)
-            self.invf.append(1)
-            self.fact[i+1] = self.fact[i]*(i+1)%modulo
-            if i:
-                self.invn[i+1] = (modulo - self.invn[modulo%(i+1)]*(modulo//(i+1))) % modulo
-                self.invf[i+1] = self.invf[i] * self.invn[i+1] % modulo
-        self.max_fact = n
+        if n > self.max_fact:
+            for i in range(self.max_fact, n):
+                self.fact.append(1)
+                self.invn.append(1)
+                self.invf.append(1)
+                self.fact[i+1] = self.fact[i]*(i+1)%modulo
+                if i:
+                    self.invn[i+1] = (modulo - self.invn[modulo%(i+1)]*(modulo//(i+1))) % modulo
+                    self.invf[i+1] = self.invf[i] * self.invn[i+1] % modulo
+            self.max_fact = n
     def comb_prime_mod_n_small(self, n, k, modulo):
         if n < 0 or n < k or k < 0:
             return 0
