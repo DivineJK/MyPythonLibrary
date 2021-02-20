@@ -2,6 +2,7 @@
 MOD_free = 998244353
 root_free = 128805723
 invr_free = 31
+#print(*bit_inverter)
 def ntt_free(f, n, root=root_free):
     if n == 1:
         return f
@@ -9,13 +10,10 @@ def ntt_free(f, n, root=root_free):
     depth = len(bin(n))-3
     res = [0]*n
     pos = 0
-    for i in range(n):
+    for i in range(n-1):
         res[i] = f[pos]
-        tmp = ((i+1)&-(i+1)) << 1
-        pos ^= (n-1)&(n-n//tmp)
-    left = 2
-    right = 1
-    thgir = n >> 1
+        pos ^= (n - (1 << (depth - ((i+1)&-(i+1)).bit_length())))
+    res[n-1] = f[pos]
     base_list = [1]*24
     base_list[-1] = root
     for i in range(23, 0, -1):
@@ -23,20 +21,16 @@ def ntt_free(f, n, root=root_free):
     for i in range(depth):
         grow = 1
         seed = base_list[i+1]
-        for k in range(right):
-            idx_l = k
-            idx_r = k + right
-            for j in range(thgir):
-                u = res[idx_l]
-                v = res[idx_r] * grow % MOD
-                res[idx_l] = (u + v) % MOD
-                res[idx_r] = (u - v) % MOD
-                idx_l += left
-                idx_r += left
+        offset = 1 << i
+        for k in range(offset):
+            for j in range(k, n, 1<<(i+1)):
+                u = res[j]
+                v = res[j+offset] * grow % MOD
+                res[j] = u + v
+                if res[j] >= MOD: res[j] -= MOD
+                res[j+offset] = u - v
+                if res[j+offset] < MOD: res[j+offset] += MOD
             grow = grow * seed % MOD
-        left <<= 1
-        right <<= 1
-        thgir >>= 1
     return res
 def inverse_ntt_free(f, n):
     res = ntt_free(f, n, invr_free)
@@ -64,8 +58,8 @@ def convolute_one(f, g, MOD=MOD_free):
         return res
     x = f[:] + [0]*(bin_top-n)
     y = g[:] + [0]*(bin_top-m)
-    x = ntt0(x, bin_top)
-    y = ntt0(y, bin_top)
+    x = ntt_free(x, bin_top)
+    y = ntt_free(y, bin_top)
     for i in range(bin_top):
         x[i] = x[i] * y[i] % MOD
-    return inverse_ntt0(x, bin_top)
+    return inverse_ntt_free(x, bin_top)
