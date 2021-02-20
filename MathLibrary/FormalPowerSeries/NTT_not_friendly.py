@@ -6,10 +6,10 @@ def ntt1(f, n, root=3832359):
     depth = len(bin(n))-3
     res = [0]*n
     pos = 0
-    for i in range(n):
+    for i in range(n-1):
         res[i] = f[pos]
-        tmp = ((i+1)&-(i+1)) << 1
-        pos ^= (n-1)&(n-n//tmp)
+        pos ^= (n - (1 << (depth - ((i+1)&-(i+1)).bit_length() - 1)))
+    res[n-1] = f[pos]
     left = 2
     right = 1
     thgir = n >> 1
@@ -20,20 +20,16 @@ def ntt1(f, n, root=3832359):
     for i in range(depth):
         grow = 1
         seed = base_list[i+1]
-        for k in range(right):
-            idx_l = k
-            idx_r = k + right
-            for j in range(thgir):
-                u = res[idx_l]
-                v = res[idx_r] * grow % MOD
-                res[idx_l] = (u + v) % MOD
-                res[idx_r] = (u - v) % MOD
-                idx_l += left
-                idx_r += left
+        offset = 1 << i
+        for k in range(offset):
+            for j in range(k, n, 1<<(i+1)):
+                u = res[j]
+                v = res[j+offset] * grow % MOD
+                res[j] = u + v
+                if res[j] >= MOD: res[j] -= MOD
+                res[j+offset] = u - v
+                if res[j+offset] < MOD: res[j+offset] += MOD
             grow = grow * seed % MOD
-        left <<= 1
-        right <<= 1
-        thgir >>= 1
     return res
 def inverse_ntt1(f, n):
     res = ntt1(f, n, 197)
@@ -54,13 +50,10 @@ def ntt2(f, n, root=72693513):
     depth = len(bin(n))-3
     res = [0]*n
     pos = 0
-    for i in range(n):
+    for i in range(n-1):
         res[i] = f[pos]
-        tmp = ((i+1)&-(i+1)) << 1
-        pos ^= (n-1)&(n-n//tmp)
-    left = 2
-    right = 1
-    thgir = n >> 1
+        pos ^= (n - (1 << (depth - ((i+1)&-(i+1)).bit_length() - 1)))
+    res[n-1] = f[pos]
     base_list = [1]*24
     base_list[-1] = root
     for i in range(23, 0, -1):
@@ -68,20 +61,16 @@ def ntt2(f, n, root=72693513):
     for i in range(depth):
         grow = 1
         seed = base_list[i+1]
-        for k in range(right):
-            idx_l = k
-            idx_r = k + right
-            for j in range(thgir):
-                u = res[idx_l]
-                v = res[idx_r] * grow % MOD
-                res[idx_l] = (u + v) % MOD
-                res[idx_r] = (u - v) % MOD
-                idx_l += left
-                idx_r += left
+        offset = 1 << i
+        for k in range(offset):
+            for j in range(k, n, 1<<(i+1)):
+                u = res[j]
+                v = res[j+offset] * grow % MOD
+                res[j] = u + v
+                if res[j] >= MOD: res[j] -= MOD
+                res[j+offset] = u - v
+                if res[j+offset] < MOD: res[j+offset] += MOD
             grow = grow * seed % MOD
-        left <<= 1
-        right <<= 1
-        thgir >>= 1
     return res
 def inverse_ntt2(f, n):
     res = ntt2(f, n, 721)
@@ -102,13 +91,10 @@ def ntt3(f, n, root=135983751):
     depth = len(bin(n))-3
     res = [0]*n
     pos = 0
-    for i in range(n):
+    for i in range(n-1):
         res[i] = f[pos]
-        tmp = ((i+1)&-(i+1)) << 1
-        pos ^= (n-1)&(n-n//tmp)
-    left = 2
-    right = 1
-    thgir = n >> 1
+        pos ^= (n - (1 << (depth - ((i+1)&-(i+1)).bit_length() - 1)))
+    res[n-1] = f[pos]
     base_list = [1]*24
     base_list[-1] = root
     for i in range(23, 0, -1):
@@ -116,20 +102,16 @@ def ntt3(f, n, root=135983751):
     for i in range(depth):
         grow = 1
         seed = base_list[i+1]
-        for k in range(right):
-            idx_l = k
-            idx_r = k + right
-            for j in range(thgir):
-                u = res[idx_l]
-                v = res[idx_r] * grow % MOD
-                res[idx_l] = (u + v) % MOD
-                res[idx_r] = (u - v) % MOD
-                idx_l += left
-                idx_r += left
+        offset = 1 << i
+        for k in range(offset):
+            for j in range(k, n, 1<<(i+1)):
+                u = res[j]
+                v = res[j+offset] * grow % MOD
+                res[j] = u + v
+                if res[j] >= MOD: res[j] -= MOD
+                res[j+offset] = u - v
+                if res[j+offset] < MOD: res[j+offset] += MOD
             grow = grow * seed % MOD
-        left <<= 1
-        right <<= 1
-        thgir >>= 1
     return res
 def inverse_ntt3(f, n):
     res = ntt3(f, n, 19)
