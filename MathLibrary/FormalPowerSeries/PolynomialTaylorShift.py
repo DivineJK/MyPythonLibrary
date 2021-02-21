@@ -90,6 +90,7 @@ class polynomial_taylor_shift:
             self.invf[-1] = inved(self.fact[-1], MOD)
             for i in range(n, self.fact_cnt, -1):
                 self.invf[i-1] = self.invf[i] * i % MOD
+            self.fact_cnt = n
         x = [0]*n
         y = [0]*n
         tmp = 1
