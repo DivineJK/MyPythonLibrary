@@ -33,15 +33,22 @@ class segment_tree:
     def get_segment(self, l, r): # interval == [l, r)
         res = self.identity
         L, R = l + self.bin_top, r + self.bin_top
+        lseg = []
+        rseg = []
         while L < R:
             if L & 1:
-                res = self.op(res, self.segtree[L])
+                lseg.append(L)
                 L += 1
             if R & 1:
-                res = self.op(res, self.segtree[R-1])
+                rseg.append(R-1)
                 R -= 1
             L >>= 1
             R >>= 1
+        rseg.reverse()
+        for i in lseg:
+            res = self.op(res, self.segtree[i])
+        for i in rseg:
+            res = self.op(res, self.segtree[i])
         return res
     def st_bisect(self, lower, upper, val):
         if self.get_segment(lower, upper) < val:
