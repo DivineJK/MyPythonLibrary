@@ -1,11 +1,9 @@
 from heapq import heappush, heappop
-compf = lambda a, b: a < b
 class dijkstra:
-    def __init__(self, n, compare, identity=0, INF=int(1e18)):
+    def __init__(self, n, identity=0, INF=int(1e18)):
         self.INF = INF
         self.n = n
         self.identity = identity
-        self.compare = compare
         self.cost = [INF]*n
         self.neighbor = [[] for _ in range(n)]
         self.neighbor_cost = {}
@@ -20,14 +18,14 @@ class dijkstra:
             self.neighbor[a].append(b)
             self.neighbor_cost[a*self.n+b] = c
         else:
-            if self.compare(c, self.neighbor_cost[a*self.n+b]):
+            if self.neighbor_cost[a*self.n+b] > c:
                 self.neighbor_cost[a*self.n+b] = c
         if not directed:
             if a*self.n+b not in self.neighbor_cost:
                 self.neighbor[b].append(a)
                 self.neighbor_cost[b*self.n+a] = c
             else:
-                if self.compare(self.neighbor_cost[b*self.n+a], c):
+                if self.neighbor_cost[b*self.n+a] > c:
                     self.neighbor_cost[b*self.n+a] = c
     def simply_dijkstra(self, st):
         pq = []
@@ -43,7 +41,7 @@ class dijkstra:
             if self.cost[r] < b[0]:
                 continue
             for i in self.neighbor[r]:
-                if self.compare(self.cost[r]+self.neighbor_cost[r*self.n+i], self.cost[i]):
+                if self.cost[i] > self.cost[r]+self.neighbor_cost[r*self.n+i]:
                     self.cost[i] = self.cost[r]+self.neighbor_cost[r*self.n+i]
                     self.prev[i] = r
                     heappush(pq, (self.cost[i], i))
