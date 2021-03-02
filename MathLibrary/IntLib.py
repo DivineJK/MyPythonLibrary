@@ -11,23 +11,18 @@ def extgcd(a, b, c):
         if c % a == 0:
             return c // a, 0
         return -1, -1
-    if b < 0:
-        a, b, c = -a, -b, -c
-    tk, tl = a, b
-    while tl:
-        tk, tl = tl, tk % tl
-    if c % tk:
-        return -1, -1
-    a //= tk
-    b //= tk
-    c //= tk
     x, y, u, v, k, l = 1, 0, 0, 1, a, b
     while l:
         x, y, u, v = u, v, x - u * (k // l), y - v * (k // l)
         k, l = l, k % l
-    x = c*x % b
-    y = (c-a*x)//b
-    return x, y
+    if k < 0: k = -k
+    if c % k: return -1, -1
+    a, b, c = a // k, b // k, c // k
+    if b < 0: a, b, c = -a, -b, -c
+    x *= c
+    y *= c
+    u = (b - x - 1) // b
+    return x+u*b, y-u*a
 def inved(a, modulo):
     x, y, u, v, k, l = 1, 0, 0, 1, a, modulo
     while l:
@@ -76,7 +71,7 @@ def factorization(n):
 def divisors(n):
     L = []
     p = 1
-    c = 1
+    c = 0
     while p * p <= n:
         if n % p == 0:
             c += 1
