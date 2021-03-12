@@ -11,18 +11,12 @@ def simply_fft(f, inverse=False):
         bin_top <<= 1
         depth += 1
     res = [0]*bin_top
-    tmp = [0]*bin_top
-    for i in range(bin_top):
-        bas = 1
-        pos = 0
-        for j in range(depth, 0, -1):
-            pos += bas * ((i>>(j-1))&1)
-            bas <<= 1
-        if pos < n:
-            res[i] = f[pos]
+    pos = 0
+    for i in range(n-1):
+        res[i] = f[pos]
+        pos ^= (n - (1 << (depth - ((i+1)&-(i+1)).bit_length())))
+    res[n-1] = f[pos]
     left = 2
-    right = 1
-    thgir = 1 << (depth - 1)
     for i in range(depth):
         grow = 1
         seed = 0
@@ -30,16 +24,15 @@ def simply_fft(f, inverse=False):
             seed = exp(2j*pi/left)
         else:
             seed = exp(-2j*pi/left)
-        for k in range(right):
-            for j in range(thgir):
-                tmp[j*left+k] = res[j*left+k] + grow * res[j*left+k+right]
-                tmp[j*left+k+right] = res[j*left+k] - grow * res[j*left+k+right]
+        offset = 1 << i
+        for k in range(offset):
+            for j in range(k, n, 1<<(i+1)):
+                u = res[j]
+                v = res[j+offset] * grow
+                res[j] = u + v
+                res[j+offset] = u - v
             grow *= seed
-        for j in range(bin_top):
-            res[j] = tmp[j]
         left <<= 1
-        right <<= 1
-        thgir >>= 1
     if inverse:
         for i in range(bin_top):
             res[i] /= bin_top
