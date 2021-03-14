@@ -82,6 +82,21 @@ def divisors(n):
         if L[i-1] * L[i-1] != n:
             L.append(n // L[i-1])
     return L
+def factorization_divisors(d, limit=-1, is_sort=True, rev=False):
+    res = [1]
+    cnt = 1
+    pnt = 0
+    for i in d:
+        tmp = i
+        lgt = cnt
+        for j in range(d[i]):
+            for k in range(lgt):
+                if limit == -1 or res[k]*tmp <= limit:
+                    res.append(res[k]*tmp)
+                    cnt += 1
+            tmp *= i
+    if is_sort: res.sort(reverse=rev)
+    return res
 def totient(n):
     a = n
     p = 2
