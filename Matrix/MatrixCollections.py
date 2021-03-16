@@ -193,3 +193,103 @@ class matrix_collections:
                         raise Exception("value error: res[{}][{}] = {}".format(i, j, res[i][j]))
                     res[i][j] %= modulo
         return res
+    def linear_equation_solver(self, a, b, modulo=0):
+        if not self.ismatrix(a):
+            raise Exception("strange input: a = {}".format(a))
+        if type(b) != list:
+            raise Exception("strange input: b = {}".format(b))
+        for i in b:
+            if type(i) not in self.number_type:
+                raise Exception("strange input: b = {}".format(b))
+        n, m, p = len(a), len(a[0]), len(b)
+        ext_mat = self.zeros(n, m+1)
+        for i in range(n):
+            for j in range(m):
+                ext_mat[i][j] = a[i][j]
+                if modulo: ext_mat[i][j] %= modulo
+        if m < p:
+            for i in range(m, p):
+                ext_mat.append([0]*(m+1))
+        for i in range(p):
+            ext_mat[i][m] = b[i]
+            if modulo: ext_mat[i][m] %= modulo
+        pnt = 0
+        for j in range(m):
+            x = pnt
+            flg = True
+            while x < n:
+                if ext_mat[x][j]:
+                    flg = False
+                    break
+                x += 1
+            if flg: continue
+            if pnt != x:
+                for k in range(j, m+1):
+                    ext_mat[pnt][k], ext_mat[x][k] = ext_mat[x][k], ext_mat[pnt][k]
+            tmp = ext_mat[pnt][j]
+            ext_mat[pnt][j] = 1
+            invt = 0
+            if modulo:
+                invt = self.inved(tmp, modulo)
+            for k in range(j+1, m+1):
+                if modulo:
+                    ext_mat[pnt][k] = invt * ext_mat[pnt][k] % modulo
+                else:
+                    ext_mat[pnt][k] /= tmp
+            for l in range(pnt+1, n):
+                tmp = ext_mat[l][j]
+                ext_mat[l][j] = 0
+                if tmp == 0: continue
+                for k in range(j+1, m+1):
+                    ext_mat[l][k] -= tmp * ext_mat[pnt][k]
+                    if modulo:
+                        ext_mat[l][k] %= modulo
+            pnt += 1
+        b = -1
+        for i in range(n, 0, -1):
+            flg = True
+            for j in range(m):
+                if ext_mat[i-1][j] != 0:
+                    flg = False
+                    break
+            if flg:
+                if ext_mat[i-1][m] != 0:
+                    return [[-1]*(m+1)]
+            else:
+                b = i - 1
+                break
+        solution = [[0]*m for _ in range(m-b)]
+        idx = [1]*m
+        fid = [1]*m
+        for i in range(b, -1, -1):
+            s = 0
+            while ext_mat[i][s] == 0:
+                s += 1
+            solution[0][s] = ext_mat[i][m]
+            idx[s] = 0
+            fid[s] = 0
+            for j in range(i):
+                tmp = ext_mat[j][s]
+                ext_mat[j][s] = 0
+                for k in range(s+1, m+1):
+                    ext_mat[j][k] -= ext_mat[i][k] * tmp
+                    if modulo:
+                        ext_mat[j][k] %= modulo
+        if idx[0]:
+            solution[idx[0]][0] = 1
+        for i in range(m-1):
+            idx[i+1] += idx[i]
+            if fid[i+1]:
+                solution[idx[i+1]][i+1] = 1
+        for i in range(b+1):
+            s = 0
+            while ext_mat[i][s] == 0:
+                s += 1
+            for j in range(s+1, m):
+                if fid[j]:
+                    solution[idx[j]][s] = -ext_mat[i][j]
+                    if modulo:
+                        solution[idx[j]][s] %= modulo
+        return solution
+mc = matrix_collections()
+print(mc.linear_equation_solver([[1, 0, 0], [0, 1, 0], [0, 0, 1]], [0, 0, 0], 998244353))
