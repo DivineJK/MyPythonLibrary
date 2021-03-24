@@ -1,5 +1,3 @@
-import sys
-sys.setrecursionlimit(50000)
 class Bellman_Ford:
     def __init__(self, n, INF=int(1e18)):
         self.n = n
@@ -10,7 +8,7 @@ class Bellman_Ford:
         self.edges = {}
         self.arrived = [False]*n
         self.reachable = [False]*n
-        self.negative_weight_cycle = False
+        self.negative_weight_cycle = [False]*n
     def connect_edge(self, a, b, c, directed=True):
         if a*self.n+b in self.edges:
             if self.edges[a*self.n+b] > c:
@@ -25,35 +23,31 @@ class Bellman_Ford:
             else:
                 self.edges[b*self.n+a] = c
                 self.graph[b].append(a)
-    def dfs(self, st, gl):
-        if st == gl:
-            self.reachable[st] = True
-            return True
-        if self.arrived[st]:
-            return self.reachable[st]
-        reachability = False
-        self.arrived[st] = True
-        for i in self.graph[st]:
-            if self.dfs(i, gl):
-                reachability = True
-                break
-        self.reachable[st] = reachability
-        return reachability
     def simply_Bellman_Ford(self, v, d=-1):
         if d == -1: d = self.n - 1
         self.distance = [self.INF]*self.n
         self.prev = [-1]*self.n
         self.distance[v] = 0
+        self.reachable = [False]*self.n
+        self.reachable[v] = True
         for i in range(1, self.n):
             for ab in self.edges:
                 a = ab//self.n
                 b = ab%self.n
+                if not self.reachable[a]:
+                    continue
                 if self.distance[b] > self.distance[a] + self.edges[ab]:
                     self.distance[b] = self.distance[a] + self.edges[ab]
-                    self.prev[b] = a
-        for ab in self.edges:
-            a = ab//self.n
-            b = ab % self.n
-            if self.distance[a] + self.edges[ab] < self.distance[b]:
-                if self.reachable[b]:
-                    self.negative_weight_cycle = True
+                    self.reachable[b] = True
+        self.negative_weight_cycle = [False]*self.n
+        for i in range(self.n):
+            for ab in self.edges:
+                a = ab//self.n
+                b = ab%self.n
+                if not self.reachable[a]:
+                    continue
+                if self.distance[b] > self.distance[a] + self.edges[ab]:
+                    self.distance[b] = self.distance[a] + self.edges[ab]
+                    self.negative_weight_cycle[b] = True
+                if self.negative_weight_cycle[a]:
+                    self.negative_weight_cycle[b] = True
