@@ -1,25 +1,57 @@
+oper = lambda a, b: a + b
+ivfn = lambda a: -a
 class fenwick_tree:
-    def __init__(self, n, initial=[]):
+    def __init__(self, n, op, iv, identity=0, initial=[]):
         self.n = n
-        self.ft = [0]*(n+1)
+        self.identity = identity
+        self.op = op
+        self.iv = iv
+        self.ft = [identity]*(n+1)
         if initial != []:
             for i in range(n):
                 x = i + 1
                 while x <= n:
-                    self.ft[x] += initial[i]
+                    self.ft[x] = self.op(self.ft[x], initial[i])
                     x += x - (x & (x - 1))
     def ft_add(self, p, v):
         x = p + 1
         while x <= self.n:
-            self.ft[x] += v
+            self.ft[x] = self.op(self.ft[x], v)
             x += x - (x & (x - 1))
     def ft_sum(self, x):
-        S = 0
+        S = self.identity
+        if x <= 0:
+            return S
         while x:
-            S += self.ft[x]
+            S = self.op(S, self.ft[x])
             x = x & (x - 1)
         return S
     def get_segment(self, l, r):
         if l > r:
-            return 0
-        return self.ft_sum(r) - self.ft_sum(l)
+            return self.identity
+        return self.op(self.ft_sum(r), self.iv(self.ft_sum(l)))
+    def leftside(self, rank, l, r):
+        ls = self.ft_sum(r)
+        if ls < rank:
+            return -1
+        d = (l + r) // 2
+        while r - l > 1:
+            if self.ft_sum(d) + rank <= ls:
+                l = d
+            else:
+                r = d
+            d = (l + r) // 2
+        return d
+    def rightside(self, rank, l, r):
+        rs = self.get_segment(l, r)
+        c = l
+        if rs <= rank:
+            return self.n
+        d = (l + r) // 2
+        while r - l > 1:
+            if self.get_segment(c, d) <= rank:
+                l = d
+            else:
+                r = d
+            d = (l + r) // 2
+        return d
