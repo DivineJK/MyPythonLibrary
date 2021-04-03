@@ -1,24 +1,22 @@
-def primes(n):
-    flg = [True]*(n+1)
-    flg[0] = False
-    flg[1] = False
-    p = 2
-    while p * p <= n:
-        if flg[p]:
-            for i in range(p, n//p+1):
-                flg[p*i] = False
-        p += 1
-    res = []
-    for i in range(n+1):
-        if flg[i]:
-            res.append(i)
-    return res
-
-def FMT(f, n):
-    m = len(f)
-    if m < n:
-        f = f[:] + [0]*(n-m)
-    p_tab = primes(n)
+def FMT(f):
+    n = len(f)
+    p_flg = [True]*(n+1)
+    p_flg[0] = False
+    p_flg[1] = False
+    p_tab = []
+    if n == 2:
+        p_tab.append(2)
+    else:
+        p = 3
+        while p * p <= n:
+            if p_flg[p]:
+                for i in range(p, n//p+1, 2):
+                    p_flg[p*i] = False
+            p += 1
+        p_tab = [2]
+        for i in range(3, n+1, 2):
+            if p_flg[i]:
+                p_tab.append(i)
     res = [f[i] for i in range(n)]
     for i in p_tab:
         for j in range(n//i, 0, -1):
