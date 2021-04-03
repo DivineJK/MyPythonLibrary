@@ -291,5 +291,3 @@ class matrix_collections:
                     if modulo:
                         solution[idx[j]][s] %= modulo
         return solution
-mc = matrix_collections()
-print(mc.linear_equation_solver([[1, 0, 0], [0, 1, 0], [0, 0, 1]], [0, 0, 0], 998244353))
