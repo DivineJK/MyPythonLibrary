@@ -21,7 +21,7 @@ class dijkstra:
             if self.neighbor_cost[a*self.n+b] > c:
                 self.neighbor_cost[a*self.n+b] = c
         if not directed:
-            if a*self.n+b not in self.neighbor_cost:
+            if b*self.n+a not in self.neighbor_cost:
                 self.neighbor[b].append(a)
                 self.neighbor_cost[b*self.n+a] = c
             else:
