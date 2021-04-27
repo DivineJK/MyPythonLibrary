@@ -6,7 +6,7 @@ class matrix_collections:
     def zeros(self, n, m):
         return [[0]*m for _ in range(n)]
     def identity(self, n):
-        return [[i==j for j in range(n)] for i in range(n)]
+        return [[(i==j)*1 for j in range(n)] for i in range(n)]
     def inved(self, a, modulo):
         x, y, u, v, k, l = 1, 0, 0, 1, a, modulo
         while l:
