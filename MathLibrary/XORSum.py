@@ -13,24 +13,24 @@ def xorSum(f, modulo = 0):
     if modulo:
         for i in range(n):
             S += f[i]
-            if S >= mod:
-                S -= mod
+            if S >= modulo:
+                S -= modulo
             for j in range(mlg):
                 if (f[i] >> j) & 1:
                     y[j] += 1
-                    if y[j] >= mod:
-                        y[j] -= mod
-        S = (n * S) % mod
+                    if y[j] >= modulo:
+                        y[j] -= modulo
+        S = (n * S) % modulo
         b = 1
         for i in range(mlg):
-            S -= ((y[i] * y[i]) % mod) * b % mod
+            S -= ((y[i] * y[i]) % modulo) * b % modulo
             if S < 0:
-                S += mod
+                S += modulo
             b <<= 1
-            b %= mod
+            b %= modulo
         return S
     for i in range(n):
-        S = (S + f[i]) % mod
+        S += f[i]
         for j in range(mlg):
             if (f[i] >> j) & 1:
                 y[j] += 1
