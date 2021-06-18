@@ -9,8 +9,8 @@ def xorSum(f, modulo = 0):
     while g:
         mlg += 1
         g >>= 1
+    y = [0]*mlg
     if modulo:
-        y = [0]*mlg
         for i in range(n):
             S += f[i]
             if S >= mod:
