@@ -37,6 +37,32 @@ def CRT(num, a_list, m_list):
         r += bas * x
         bas *= m_list[i]
     return r % bas
+def single_modinv(n, m):
+    res = 1
+    p = n
+    while p > 1:
+        res = res * (m - (m // p)) % m
+        p = m % p
+    return res
+def garner(a, m, mod = 0):
+    n = len(a)
+    c = [0]*n
+    b = 1
+    res = 0
+    for i in range(n):
+        t = a[i]
+        if a[i] >= m[i]:
+            a[i] %= m[i]
+        for j in range(i):
+            t -= c[j]
+            t = (t * single_modinv(m[j], m[i])) % m[i]
+        res += b * t
+        b *= m[i]
+        c[i] = t
+        if mod:
+            res %= mod
+            b %= mod
+    return res
 def IsPrime(num):
     p = 2
     if num <= 1:
