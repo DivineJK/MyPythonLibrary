@@ -1,13 +1,16 @@
-class union_find:
+class UnionFind:
     def __init__(self, n):
         self.n = n
         self.par = [i for i in range(n)]
         self.size = [1]*n
     def root(self, x):
-        if self.par[x] == x:
-            return x
-        self.par[x] = self.root(self.par[x])
-        return self.par[x]
+        t = x
+        while self.par[t] != t:
+            t = self.par[t]
+        s = x
+        while self.par[s] != t:
+            s, self.par[s] = self.par[s], t
+        return t
     def same(self, x, y):
         return self.root(x) == self.root(y)
     def unite(self, x, y):
