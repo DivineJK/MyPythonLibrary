@@ -1,11 +1,9 @@
-oper = lambda a, b: a + b
-ivfn = lambda a: -a
 class fenwick_tree:
-    def __init__(self, n, op, iv, identity=0, initial=[]):
+    def __init__(self, n, identity=0, initial=[]):
         self.n = n
         self.identity = identity
-        self.op = op
-        self.iv = iv
+        self.op = lambda a, b: a + b
+        self.iv = lambda a: -a
         self.ft = [identity]*(n+1)
         if initial != []:
             for i in range(n):
