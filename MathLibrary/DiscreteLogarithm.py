@@ -65,7 +65,7 @@ class discrete_log:
     def divisors(self, n):
         L = []
         p = 1
-        c = 1
+        c = 0
         while p * p <= n:
             if n % p == 0:
                 c += 1
