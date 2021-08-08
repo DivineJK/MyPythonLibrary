@@ -3,51 +3,113 @@
 
 「それ単体で使える」がメインなので関数の被りがひどい。
 
-## 内容
-### DataStructures
-|名称|概要|
-|:--|:--|
-|FenwickTree.py|BIT|
-|LazySegmentTree.py|遅延評価付きセグメントツリー|
-|UnionFind.py|UnionFind|
-|segtree.py|ふつうのセグメントツリー（二分探索つき）|
+## DataStructures
 
-### Geometry
-|名称|概要|
-|:--|:--|
-|ArgSort.py|偏角ソート|
+- CumulativeSum2D
+- FenwickTree
+- LazySegmentTree
+- LiChaoSegmentTree
+- UnionFind
+- WeightedUnionFind
+- segtree
 
-### Graph
-|名称|概要|
-|:--|:--|
-|LCA.py|最小共通祖先|
-|RealTSP.py|わりと実用的な巡回セールスマン問題ソルバ|
+## DynamicProgramming
 
-### MathLibrary
-|名称|概要|
-|:--|:--|
-|Convolution_max.py|maxの畳み込み|
-|Convolution_min.py|minの畳み込み|
-|FMT.py|高速メビウス変換|
-|FZT.py|高速ゼータ変換|
-|IntLib.py|整数演算いろいろ|
-|PrimeNumbers.py|エラトステネスのふるい|
-|Rational.py|有理数演算|
-|safety_sqrt.py|2乗根を含む計算をfloat使わずにやる|
+- CommonSubsequence
+- small_n_01knapsack
+- value_first_01knapsack
+- weight_first_01knapsack
 
-### Matrix
-|名称|概要|
-|:--|:--|
-|MatrixCollections.py|行列のいろいろ|
+## Geometry
 
-### Others
-|名称|概要|
-|:--|:--|
-|ForStealth.py|コンテスト潜伏用プログラム|
-|date_calc.py|日付に関する色々|
+- ArgSort
+- BasicGeometry
 
-### Sequence
-|名称|概要|
-|:--|:--|
-|LexicographicalOrder.py|与えられた順列が辞書順で何番目かを求める|
-|LIS.py|最長単調増加列|
+## Graph
+
+- Tree
+  - GetInOutTime
+  - LCA
+  - RootedTree
+  - TreeCentroid
+  - TreeDiameter
+- BellmanFord
+- Dijkstra
+- DijkstraWithPathRestoring
+- Kruskal
+- RealTSP
+- SCC
+- Warshall_Floyd
+- tsp_solver_for_cp
+
+## MathLibrary
+
+- Convolution
+  - Convolution_and
+  - Convolution_gcd
+  - Convolution_lcm
+  - Convolution_max
+  - Convolution_min
+  - Convolution_or
+  - Convolution_prod
+  - Convolution_xor
+- FormalPowerSeries
+  - BernoulliNumber_Fast
+  - Differentiate
+  - FPS_exp
+  - FPS_log
+  - Integrate
+  - Inverse
+  - NTT_friendly
+  - NTT_not_friendly
+  - PolynomialTaylorSeries
+  - StirlingNumber_First
+- BernoulliNumber_Normal
+- Combination
+- DirichletSeries
+- DiscreteLogarithm
+- FFT
+- FMT
+- FZT
+- FloorSum
+- GeometricProgression
+- IntLib
+- NTT
+- Rational
+- StringDecimal
+- UnnamedSeries
+- XORSum
+- safety_sqrt
+
+## Matrix
+
+- LineMatrix
+- MatrixCollections
+
+## Others
+
+- ForStealth
+- GrayCode
+- date_calc
+- sreekumar_function
+
+## Search
+
+- BFS_template
+
+## Sequence
+
+- CoordinateCompression
+- EnumeratePermutations
+- Inversion
+- LIS
+- LexicographicalOrder
+- Num_to_Permutations
+
+## String
+
+- Manacher
+- RLE
+- SA_IS
+- SuffixArray_naivete
+- Z_Algorithm
