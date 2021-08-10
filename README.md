@@ -106,6 +106,7 @@
 - Inversion
 - LIS
 - LexicographicalOrder
+- MedianOfMedians
 - Num_to_Permutations
 
 ## String
