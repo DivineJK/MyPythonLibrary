@@ -22,8 +22,10 @@
 
 ## Geometry
 
+- AffineSpace2d
 - ArgSort
 - BasicGeometry
+- ConvexHull
 
 ## Graph
 
