@@ -40,7 +40,7 @@
 - DijkstraWithPathRestoring
 - Kruskal
 - RealTSP
-- SCC
+- StronglyConnectedComponents
 - Warshall_Floyd
 - tsp_solver_for_cp
 
