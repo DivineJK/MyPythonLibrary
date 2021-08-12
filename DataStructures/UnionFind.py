@@ -3,6 +3,7 @@ class UnionFind:
         self.n = n
         self.par = [i for i in range(n)]
         self.size = [1]*n
+        self.groupCount = n
     def root(self, x):
         t = x
         while self.par[t] != t:
@@ -17,6 +18,7 @@ class UnionFind:
         x = self.root(x)
         y = self.root(y)
         if x != y:
+            self.groupCount -= 1
             if self.size[x] < self.size[y]:
                 x, y = y, x
             self.par[y] = x
