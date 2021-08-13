@@ -91,6 +91,7 @@
 ## Others
 
 - ForStealth
+- EnumeratePolyomino
 - GrayCode
 - date_calc
 - sreekumar_function
