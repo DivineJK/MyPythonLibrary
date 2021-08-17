@@ -12,6 +12,10 @@ class UnionFind:
         while self.par[s] != t:
             s, self.par[s] = self.par[s], t
         return t
+    def getSize(self, x):
+        return self.size[self.root(x)]
+    def getGroupCount(self):
+        return self.groupCount
     def same(self, x, y):
         return self.root(x) == self.root(y)
     def unite(self, x, y):
