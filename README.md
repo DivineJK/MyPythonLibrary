@@ -73,6 +73,8 @@
 - FFT
 - FMT
 - FZT
+- FloorCeilSum
+- FloorCeilSumTable
 - FloorSum
 - GeometricProgression
 - IntLib
