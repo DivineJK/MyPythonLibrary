@@ -92,6 +92,7 @@
 
 ## Others
 
+- BoundingBox
 - ForStealth
 - EnumeratePolyomino
 - GrayCode
