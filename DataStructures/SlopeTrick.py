@@ -39,6 +39,6 @@ class SlopeTrick:
         self.lCount += 1
         if a > u:
             self.minimum += a - u
-    def addAbsoluteFunction(self, a):
+    def addMagnitude(self, a):
         self.addLeftLamp(a)
         self.addRightLamp(a)
