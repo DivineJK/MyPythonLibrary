@@ -17,6 +17,7 @@
 ## DynamicProgramming
 
 - CommonSubsequence
+- Rerooted
 - RestrictedPermutation
 - small_n_01knapsack
 - value_first_01knapsack
