@@ -95,6 +95,8 @@
 
 ## Others
 
+- ARC047
+- AddressSequence
 - BoundingBox
 - ForStealth
 - EnumeratePolyomino
