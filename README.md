@@ -9,13 +9,15 @@
 - FenwickTree
 - LazySegmentTree
 - LiChaoSegmentTree
+- SegmentTree
+- SlopeTrick
 - UnionFind
 - WeightedUnionFind
-- segtree
 
 ## DynamicProgramming
 
 - CommonSubsequence
+- RestrictedPermutation
 - small_n_01knapsack
 - value_first_01knapsack
 - weight_first_01knapsack
