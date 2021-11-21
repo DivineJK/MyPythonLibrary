@@ -21,6 +21,7 @@ def factorization(n):
             D.append((a, 1))
             break
     return D
+# factorization_divisors: 素因数分解されている整数の約数のうち、limit以下であるものを列挙する。
 def factorization_divisors(d, limit=-1, is_sort=True, rev=False):
     res = [1]
     cnt = 1
