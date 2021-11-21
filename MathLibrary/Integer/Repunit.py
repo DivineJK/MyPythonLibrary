@@ -1,3 +1,4 @@
+# repunit: 拡張レピュニット数を求める。pをl回繰り返した整数を計算する。
 def repunit(p, l, modulo=0):
     res = 0
     bas = 1
