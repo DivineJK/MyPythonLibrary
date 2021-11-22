@@ -9,12 +9,10 @@ def totient(n):
     p = 3
     while a != 1:
         if a % p == 0:
-            u = 1
             q *= p
             res *= p - 1
-            while a % (u*p) == 0:
-                u *= p
-            a //= u
+            while a % p == 0:
+                a //= p
         p += 2
         if p * p > n and a != 1:
             res *= a - 1
