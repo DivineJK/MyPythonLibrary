@@ -11,6 +11,7 @@
 - LiChaoSegmentTree
 - SegmentTree
 - SlopeTrick
+- Stack
 - UnionFind
 - WeightedUnionFind
 
