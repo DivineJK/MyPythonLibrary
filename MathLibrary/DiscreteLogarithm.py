@@ -1,160 +1,126 @@
-class discrete_log:
-    def __init__(self):
-        self.prev_num = -1
-        self.prev_mod = -1
-        self.prev_sqrt = -1
-        self.prev_inv = -1
-        self.baby_dict = {}
-    def gcd(self, x, y):
-        while y:
-            x, y = y, x % y
-        return x
-    def extgcd(self, a, b, c):
-        if b == 0:
-            if a == 0:
-                if c == 0:
-                    return 0, 0
-                return None
-            if c % a == 0:
-                return c // a, 0
-            return None
-        if b < 0:
-            a, b, c = -a, -b, -c
-        tk, tl = a, b
-        while tl:
-            tk, tl = tl, tk % tl
-        if c % tk:
-            return None
-        a //= tk
-        b //= tk
-        c //= tk
-        x, y, u, v, k, l = 1, 0, 0, 1, a, b
-        while l:
-            x, y, u, v = u, v, x - u * (k // l), y - v * (k // l)
-            k, l = l, k % l
-        x *= c
-        k = x // b
-        x -= k * b
-        y *= c
-        y += k * a
-        return x, y
-    def ext_inved(self, a, c, modulo):
-        return self.extgcd(a, modulo, c)[0] % modulo
-    def factorization(self, n):
-        res = []
+import sys
+input = sys.stdin.readline
+
+def gcd(x, y):
+    while y:
+        x, y = y, x % y
+    return x
+def solveDiscreteLogarithm(x, y, m):
+    if y >= m or y < 0:
+        return -1
+    if x == 0:
+        if m == 1:
+            return 0
+        if y == 1:
+            return 0
+        if y == 0:
+            return 1
+        return -1
+    # factorization of x
+    p = 3
+    tmp = x - 1
+    cnt = 0
+    primes = []
+    counts = []
+    ps = 0
+    while tmp & 1:
+        tmp >>= 1
+        cnt += 1
+    if cnt:
+        primes.append(2)
+        counts.append(cnt)
+        ps += 1
+    tmp += 1
+    while tmp != 1:
         cnt = 0
-        a = n
-        while a % 2 == 0:
-            a //= 2
+        while tmp % p == 0:
+            tmp //= p
             cnt += 1
         if cnt:
-            res.append([2, cnt])
-        p = 3
-        while a != 1:
-            cnt = 0
-            while a % p == 0:
-                cnt += 1
-                a //= p
-            if cnt:
-                res.append([p, cnt])
-            p += 2
-            if p * p > n and a != 1:
-                res.append([a, 1])
-                break
-        return res
-    def divisors(self, n):
-        L = []
-        p = 1
-        c = 0
-        while p * p <= n:
-            if n % p == 0:
-                c += 1
-                L.append(p)
-            p += 1
-        for i in range(c, 0, -1):
-            if L[i-1] * L[i-1] != n:
-                L.append(n // L[i-1])
-        return L
-    def totient(self, n):
-        a = n
-        p = 2
-        res = n
-        while a != 1:
-            if a % p == 0:
-                res //= p
-                res *= p - 1
-                while a % p == 0:
-                    a //= p
-            p += 1
-            if p * p > n and a != 1:
-                res //= a
-                res *= a - 1
-                break
-        return res
-    def generalized_bsgs(self, n, x, y):
-        if x == 0:
-            if y == 0:
-                if n == 1:
-                    return 0
-                return 1
-            if y == 1:
-                if n == 1:
-                    return -1
-                return 0
-            return -1
-        fc = self.factorization(x)
-        Mp = n
-        tail = 0
-        for i in fc:
-            cnt = 0
-            while Mp % i[0] == 0:
-                Mp //= i[0]
-                cnt += 1
-            tail = max(tail, (i[1]+cnt-1)//i[1])
-        fMp = self.totient(Mp)
-        div_fMp = self.divisors(fMp)
-        bas = 1
-        for i in range(tail):
-            if y == bas:
-                return i
-            bas *= x
-            bas %= n
-        if y % self.gcd(bas, n) != 0:
-            return -1
-        loop = fMp
-        for i, k in enumerate(div_fMp):
-            if bas*pow(x, k, n)%n == bas:
-                loop = k
-                break
-        b = self.prev_inv
-        m = self.prev_sqrt
-        e = pow(x, loop, n)
-        if n != self.prev_sqrt or x != self.prev_num:
-            self.baby_dict = {}
-            self.prev_num = x
-            self.prev_mod = n
-            l, r = 0, loop
-            m = (l + r) // 2
-            while r - l > 1:
-                if m * m <= loop:
-                    l = m
-                else:
-                    r = m
-                m = (l + r) // 2
-            if m * m < loop:
-                m += 1
-            self.prev_sqrt = m
-            b = pow(self.ext_inved(x, e, n), m, n)
-            self.prev_inv = b
-            f = bas
-            for i in range(m):
-                self.baby_dict[f] = i
-                f *= x
-                f %= n
-        g = y
-        for i in range(m):
-            if g in self.baby_dict:
-                return i * m + self.baby_dict[g] + tail
-            g *= b
-            g %= n
+            primes.append(p)
+            counts.append(cnt)
+            ps += 1
+        p += 2
+        if tmp != 1 and p * p > x:
+            primes.append(tmp)
+            counts.append(1)
+            ps += 1
+            break
+    # get length of tail
+    tail = 0
+    mp = m
+    for i in range(ps):
+        f = 0
+        while mp % primes[i] == 0:
+            mp //= primes[i]
+            f += 1
+        if tail < (f + counts[i] - 1) // counts[i]:
+            tail = (f + counts[i] - 1) // counts[i]
+    # check solution exists in tail
+    z = 1
+    for i in range(tail):
+        if z == y:
+            return i
+        z = z * x % m
+    # if y = 0 mod gcd(z, m), there's no solution
+    if y % gcd(z, m):
         return -1
+    # calculate totient(mp)
+    p = 3
+    u = mp
+    tmp = mp - 1
+    if tmp & 1:
+        u >>= 1
+        while tmp & 1:
+            tmp >>= 1
+    tmp += 1
+    while tmp != 1:
+        if tmp % p == 0:
+            u //= p
+            u *= p - 1
+            while tmp % p == 0:
+                tmp //= p
+        p += 2
+        if tmp != 1 and p * p > mp:
+            u //= tmp
+            u *= tmp - 1
+            break
+    # get size of loop
+    p = 1
+    loop = u
+    while p * p <= u:
+        if u % p == 0:
+            if z * pow(x, p, m) % m == z:
+                loop = p
+                break
+            ip = u // p
+            if z * pow(x, ip, m) % m == z:
+                loop = ip
+        p += 1
+    # get ceil(sqrt(loop))
+    l, r = 0, loop+1
+    sq = (loop+1) >> 1
+    while r - l > 1:
+        if sq * sq <= loop:
+            l = sq
+        else:
+            r = sq
+        sq = (l + r) >> 1
+    if sq * sq < loop:
+        sq += 1
+    # identity
+    e = pow(x, loop, m)
+    # inverse
+    b = pow(pow(x, loop-1, m), sq, m)
+    d = {}
+    f = z
+    for i in range(sq):
+        d[f] = i
+        f = f * x % m
+    # baby-step-giant-step algorithm
+    g = y
+    for i in range(sq):
+        if g in d:
+            return i*sq+d[g]+tail
+        g = g * b % m
+    return -1
