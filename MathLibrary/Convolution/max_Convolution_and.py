@@ -1,3 +1,5 @@
+# max(a[i] & b[j] for 0 <= i < n, 0 <= j < m)
+
 def max_convolution_and(a, b):
     m = max(max(a), max(b))
     bt = 0
