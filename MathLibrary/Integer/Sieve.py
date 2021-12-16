@@ -7,9 +7,9 @@ def eratosthenes(n):
     p = 3
     while p * p <= n:
         if flg[p]:
-            for i in range(p, n//p+1, 2):
-                flg[p*i] = False
-        p += 1
+            for i in range(p*p, n+1, p):
+                flg[i] = False
+        p += 2
     res = [2]
     for i in range(3, n+1, 2):
         if flg[i]:
