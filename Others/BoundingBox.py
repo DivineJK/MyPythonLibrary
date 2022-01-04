@@ -1,3 +1,34 @@
+class BoundingBox:
+    def __init__(self):
+        self.position = (0, 0)
+        self.size = (0, 0)
+        self.isEmpty = True
+    def isInner(self, p):
+        if self.isEmpty:
+            return False
+        xi = self.position[0] <= p[0] and p[0] <= self.position[0] + self.size[0]
+        yi = self.position[1] <= p[1] and p[1] <= self.position[1] + self.size[1]
+        return xi and yi
+    def unite(self, p):
+        if not self.isInner(p):
+            self.isEmpty = False
+            x = self.size[0]
+            y = self.size[1]
+            a = self.position[0]
+            b = self.position[1]
+            if p[0] < self.position[0]:
+                x += self.position[0] - p[0]
+                a = p[0]
+            if p[1] < self.position[1]:
+                y += self.position[0] - p[0]
+                b = p[1]
+            if p[0] > self.position[0] + self.size[0]:
+                x += p[0] - self.position[0]
+            if p[1] > self.position[1] + self.size[1]:
+                y += p[1] - self.position[1]
+            self.position = (a, b)
+            self.size = (x, y)
+            
 def convertStringMapToIntegerMap(gridMap):
     n = len(gridMap)
     res = [[] for _ in range(n)]
