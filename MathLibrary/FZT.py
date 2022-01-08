@@ -1,24 +1,22 @@
 def FZT(f):
     n = len(f)
-    p_flg = [True]*(n+1)
-    p_flg[0] = False
-    p_flg[1] = False
-    p_tab = []
-    if n == 2:
-        p_tab.append(2)
-    else:
-        p = 3
-        while p * p <= n:
-            if p_flg[p]:
-                for i in range(p, n//p+1, 2):
-                    p_flg[p*i] = False
-            p += 1
-        p_tab = [2]
-        for i in range(3, n+1, 2):
-            if p_flg[i]:
-                p_tab.append(i)
-    res = [f[i] for i in range(n)]
-    for i in p_tab:
-        for j in range(1, n//i+1):
-            res[i*j-1] += res[j-1]
-    return res
+    if n <= 1:
+        return f
+    flg = [True]*(n+1)
+    p = 3
+    while p * p <= n:
+        if flg[p]:
+            for i in range(p*p, n+1, p<<1):
+                flg[i] = False
+        p += 2
+    primes = [2]
+    for i in range(3, n+1, 2):
+        if flg[i]:
+            primes.append(i)
+    g = [f[i] for i in range(n)]
+    for i in primes:
+        t = 0
+        for j in range(i, n+1, i):
+            g[j-1] += g[t]
+            t += 1
+    return g
